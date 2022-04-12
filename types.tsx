@@ -55,6 +55,86 @@ export interface LocationType {
   distance: number;
 }
 
+export interface LocationInfoType {
+  category: string;
+  comments: CommentType[];
+  distance: number | null;
+  doors: DoorType[];
+  elevators: ElevatorType[];
+  images: string[];
+  lat: number;
+  lng: number;
+  located: string;
+  locationId: number;
+  locationName: string;
+  openTime: OpenResponseType[];
+  parkings: ParkingType[];
+  ramps: RampType[];
+  rating: number;
+  restaurants: RestaurantSummaryType[];
+  toilets: ToiletType[];
+}
+
+export interface CommentType {
+  userId: number;
+  userName: string;
+  profileImageURL: string;
+  rating: number;
+  message: string;
+  timestamp: Date;
+}
+
+
+export interface Accessibility {
+  id: number;
+  located: string;
+  remark: string;
+}
+
+export interface DoorType extends Accessibility{
+  doorType: string;
+  floor: string;
+  passable: boolean;
+}
+
+export interface ElevatorType extends Accessibility{
+  passable: boolean;
+  switch: boolean;
+}
+
+export interface OpenResponseType {
+  day: string;
+  time: string;
+}
+
+export interface ParkingType {
+  enoughSpace: boolean;
+  nearEntry: boolean;
+  floor: string;
+}
+
+export interface RampType {
+  slope: string;
+  level: number;
+  handrail: boolean;
+  floor: string;
+}
+
+export interface ToiletType {
+  type: string;
+  doorType: string;
+  handrail: boolean;
+  floor: string;
+}
+
+export interface RestaurantSummaryType {
+  logoURL: string;
+  name: string;
+  restaurantId: string;
+}
+
+
+
 export interface RestaurantType extends LocationType {
   restaurantID: string;
   restaurantName: string;
