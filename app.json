@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "hadicare",
-    "slug": "hadicare",
+    "name": "handicare",
+    "slug": "handicare",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -19,7 +19,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.sopon.kntg.handicare"
     },
     "android": {
       "adaptiveIcon": {

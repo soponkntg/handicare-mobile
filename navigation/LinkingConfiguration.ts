@@ -15,7 +15,7 @@ const linking: LinkingOptions<RootTabParamList> = {
     screens: {
       Home: {
         screens: {
-          HomeStack: "home",
+          Main: "home",
           Location: "home/location/:locationID",
           Restaurant: "home/restaurant/:restaurantID",
           Accessibility: "home/accessibility",
@@ -24,7 +24,7 @@ const linking: LinkingOptions<RootTabParamList> = {
       },
       Explore: {
         screens: {
-          ExploreStack: "explore",
+          Main: "explore",
           Location: "explore/location/:locationID",
           Restaurant: "explore/restaurant/:restaurantID",
           Accessibility: "explore/accessibility",
