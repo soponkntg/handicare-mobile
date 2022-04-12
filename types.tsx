@@ -140,6 +140,44 @@ export interface RestaurantType extends LocationType {
   restaurantName: string;
 }
 
+export interface GoogleUserResponse {
+  id: string;
+  email: string;
+  verified_email: boolean;
+  name: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
+  locale: string;
+}
+
+export interface FacebookUserResponse {
+  name: string;
+  picture: {
+    data: {
+      height: number;
+      is_silhouette: boolean;
+      url: string;
+      width: number;
+    };
+  };
+  id: string;
+}
+
+export interface UserDataType {
+  token?: string;
+  data?: {
+    id: string;
+    name: string;
+    picture: string;
+  };
+  loginOption?: "facebook" | "google";
+}
+
+export interface LatLngType {
+  latitude?: number;
+  longitude?: number;
+}
 export const TEMPRECOMLOCATION: LocationType[] = [
   {
     locationID: "1",
