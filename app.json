@@ -20,6 +20,12 @@
     ],
     "ios": {
       "supportsTablet": false,
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ]
+      },
       "bundleIdentifier": "com.sopon.kntg.handicare"
     },
     "android": {
