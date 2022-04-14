@@ -75,7 +75,13 @@ export default function RestaurantScreen({
         wheelchair={true}
         door={true}
         navigateHandler={() => {
-          navigation.navigate("Accessibility");
+          navigation.navigate("Accessibility", {
+            elevators: [],
+            parkings: [],
+            toilets: [],
+            ramps: [],
+            doors: [],
+          });
         }}
       />
 

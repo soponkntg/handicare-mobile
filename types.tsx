@@ -36,7 +36,13 @@ export type MainStackParamList = {
   Main: undefined;
   Location: { locationID: string };
   Restaurant: { restaurantID: string };
-  Accessibility: undefined;
+  Accessibility: { 
+    elevators: ElevatorType[],
+    parkings: ParkingType[], 
+    toilets: ToiletType[], 
+    ramps: RampType[], 
+    doors: DoorType[]
+  };
   Modal: undefined;
 };
 
@@ -107,20 +113,20 @@ export interface OpenResponseType {
   time: string;
 }
 
-export interface ParkingType {
+export interface ParkingType extends Accessibility{
   enoughSpace: boolean;
   nearEntry: boolean;
   floor: string;
 }
 
-export interface RampType {
-  slope: string;
+export interface RampType extends Accessibility{
+  slope: string; 
   level: number;
   handrail: boolean;
   floor: string;
 }
 
-export interface ToiletType {
+export interface ToiletType extends Accessibility{
   type: string;
   doorType: string;
   handrail: boolean;
@@ -132,8 +138,6 @@ export interface RestaurantSummaryType {
   name: string;
   restaurantId: string;
 }
-
-
 
 export interface RestaurantType extends LocationType {
   restaurantID: string;

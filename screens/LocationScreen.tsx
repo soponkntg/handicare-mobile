@@ -51,10 +51,11 @@ export default function LocationScreen({
   navigation,
   route,
 }: MainStackScreenProps<"Location">) {
-  console.log(route.params.locationID)
+
   const [currentLocation, setCurrentLocation] = useState<Location.LocationObject | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [location, setLocation] = useState<LocationInfoType>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const fetchRecommendedLocations = useCallback(async (loc: Location.LocationObject) => {
   
@@ -79,7 +80,7 @@ export default function LocationScreen({
       const data: LocationInfoType = await response.json();
       console.log(data);
       setLocation(data);
-
+      setIsLoading(false);
     } catch (error) {
       console.log('error',error);
     }
@@ -105,9 +106,17 @@ export default function LocationScreen({
   const images = locationIsExisted ? location.images : _resImage;
   const comments = locationIsExisted ? location.comments : [];
   const restaurants = locationIsExisted ? location.restaurants: [];
+  const rating = locationIsExisted ? location.rating : 0;
+  const elevators = locationIsExisted ? location.elevators : [];
+  const parkings = locationIsExisted ? location.parkings : [];
+  const toilets = locationIsExisted ? location.toilets : [];
+  const ramps = locationIsExisted ? location.ramps : [];
+  const doors = locationIsExisted ? location.doors : [];
 
   return (
-    <ScrollContainer>
+    <React.Fragment>
+      {isLoading && <Text>Loading...</Text>}
+      {!isLoading && <ScrollContainer>
       <PlaceTitle title={locationIsExisted ? location.locationName : "location"} distance={distance} />
       <LocationDetail
         catagory={locationIsExisted ? location.category : "category"}
@@ -116,15 +125,21 @@ export default function LocationScreen({
       />
       <PlaceImage images={images} />
       <Accessibility
-        rating={locationIsExisted ? location.rating : 0}
-        elevator={locationIsExisted ? location.elevators.length > 0 : false}
-        parking={locationIsExisted ? location.parkings.length > 0 : false}
-        toilet={locationIsExisted ? location.toilets.length > 0 : false}
-        wheelchair={locationIsExisted ? location.ramps.length > 0 : false}
-        door={locationIsExisted ? location.doors.length > 0 : false}
+        rating={rating}
+        elevator={elevators.length != 0}
+        parking={parkings.length != 0}
+        toilet={toilets.length != 0}
+        wheelchair={ramps.length != 0}
+        door={doors.length != 0}
         navigateHandler={() => {
-          navigation.navigate("Accessibility");
-        }}
+          navigation.navigate("Accessibility", {
+            elevators: elevators,
+            parkings: parkings,
+            toilets: toilets,
+            ramps: ramps,
+            doors: doors,
+        });
+      }}
       />
       <View style={{ marginBottom: 32 }}>
         <Text style={{ fontSize: 16 }} bold>
@@ -194,7 +209,8 @@ export default function LocationScreen({
           </ListItem>
         ))}
       </View>
-    </ScrollContainer>
+    </ScrollContainer>}
+    </React.Fragment>
   );
 }
 

@@ -16,10 +16,10 @@ export default function ExploreScreen({
 
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [locations, setLocations] = useState<LocationType[]>([]);
 
   const fetchRecommendedLocations = useCallback(async (loc: Location.LocationObject) => {
-  
     try {
       
       const url = process.env.BE_URL || "http://localhost:4000";
@@ -30,13 +30,14 @@ export default function ExploreScreen({
       const data: LocationType[] = await response.json();
 
       setLocations(data)
-
+      setIsLoading(false)
     } catch (error) {
       console.log('error',error);
     }
   },[]);
 
   useEffect(() => {
+    setIsLoading(true);
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
@@ -52,23 +53,28 @@ export default function ExploreScreen({
 
   return (
     <Container>
-      <Text style={styles.title} bold>
-        All locations
-      </Text>
-      <View style={styles.listContainer}>
-        <FlatList
-          data={locations}
-          keyExtractor={(item) => item.locationID}
-          renderItem={({ item }) => (
-            <LocationCard
-              {...item}
-              navigation={() => {
-                locationNavigationHandler(item.locationID);
-              }}
-            />
-          )}
-        />
-      </View>
+      {isLoading && <Text style={styles.loading}>Loading...</Text>}
+      {!isLoading && 
+      <React.Fragment>
+        <Text style={styles.title} bold>
+          All locations
+        </Text>
+          <View style={styles.listContainer}>
+          <FlatList
+            data={locations}
+            keyExtractor={(item) => item.locationID}
+            renderItem={({ item }) => (
+              <LocationCard
+                {...item}
+                navigation={() => {
+                  locationNavigationHandler(item.locationID);
+                }}
+              />
+            )}
+          />
+        </View>
+      </React.Fragment>
+      }
     </Container>
   );
 }
@@ -82,4 +88,11 @@ const styles = StyleSheet.create({
   listContainer: {
     alignItems: "center",
   },
+  loading: {
+    position: 'absolute',
+    left: '50%',
+    marginTop: '100%',
+  }
+
+
 });
