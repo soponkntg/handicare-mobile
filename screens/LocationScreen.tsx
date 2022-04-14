@@ -7,6 +7,7 @@ import { PlaceTitle } from "../components/PlaceTItile";
 import { LocationDetail } from "../components/LocationDetail";
 import { PlaceImage } from "../components/PlaceImage";
 import { Accessibility } from "../components/Accessibility";
+import Backend from "../constants/Backend";
 import {
   AirbnbRating,
   Avatar,
@@ -60,7 +61,7 @@ export default function LocationScreen({
   const fetchRecommendedLocations = useCallback(
     async (loc: Location.LocationObject) => {
       try {
-        const url = process.env.BE_URL || "http://localhost:4000";
+        const url = Backend.backend_url || "http://localhost:4000";
         const body = {
           lat: loc.coords.latitude,
           lng: loc.coords.longitude,

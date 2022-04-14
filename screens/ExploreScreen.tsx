@@ -3,6 +3,7 @@ import { FlatList, StyleSheet, View } from "react-native";
 import LocationCard from "../components/LocationCard";
 
 import { Container, Text } from "../components/Themed";
+import Backend from "../constants/Backend";
 import {
   LocationType,
   MainStackScreenProps,
@@ -26,7 +27,7 @@ export default function ExploreScreen({
   const fetchRecommendedLocations = useCallback(
     async (loc: Location.LocationObject) => {
       try {
-        const url = process.env.BE_URL || "http://localhost:4000";
+        const url = Backend.backend_url || "http://localhost:4000";
         const lat = loc.coords.latitude;
         const lng = loc.coords.longitude;
 

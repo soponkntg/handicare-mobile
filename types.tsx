@@ -75,6 +75,16 @@ export interface LocationInfoType {
   toilets: ToiletType[];
 }
 
+export interface LocationRestaurantInfoType extends LocationInfoType {
+  restaurantId: number;
+  restaurantName: string;
+  restaurantLocated: string;
+  logoURL: string;
+  floor: string;
+  entrance: string;
+  doorType: string;
+}
+
 export interface CommentType {
   userId: number;
   userName: string;
@@ -133,8 +143,8 @@ export interface RestaurantSummaryType {
 }
 
 export interface RestaurantType extends LocationType {
-  restaurantID: number;
-  restaurantName: string;
+  restaurantID: number | null;
+  restaurantName: string | null;
 }
 
 export interface GoogleUserResponse {

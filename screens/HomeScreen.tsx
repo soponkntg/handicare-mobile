@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import RecommendedCard from "../components/RecommendedCard";
+import { Loading } from "../components/Loading";
+import axios from "axios";
 
 import { Container, Text } from "../components/Themed";
 import Backend from "../constants/Backend";
@@ -33,61 +35,68 @@ export default function HomeScreen({
   );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [locations, setLocations] = useState<LocationType[]>([]);
-  const [restaurant, setRestaurants] = useState<RestaurantType[]>([]);
+  const [restaurants, setRestaurants] = useState<RestaurantType[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // const fetchRecommendedLocations = useCallback(
-  //   async (loc: Location.LocationObject) => {
-  //     try {
-  //       const url = Backend.backend_url || "http://localhost:4000";
-  //       const lat = loc.coords.latitude;
-  //       const lng = loc.coords.longitude;
+  const fetchRecommendedLocations = useCallback(
+    async (loc: Location.LocationObject) => {
+      try {
+        const url = Backend.backend_url || "http://localhost:4000";
+        const lat = loc.coords.latitude;
+        const lng = loc.coords.longitude;
 
-  //       const response = await fetch(
-  //         url + `/data/locations?lat=${lat}&lng=${lng}`
-  //       );
-  //       const data: LocationType[] = await response.json();
+        const response = await axios.get(
+          url + `/data/recommend/location?lat=${lat}&lng=${lng}`
+        );
+        const data: LocationType[] = await response.data;
+        setLocations(data);
+      } catch (error) {
+        console.log("error", error);
+      }
+    },
+    []
+  );
 
-  //       setLocations(data);
-  //     } catch (error) {
-  //       console.log("error", error);
-  //     }
-  //   },
-  //   []
-  // );
+  const fetchRecommendedRestaurants = useCallback(
+    async (loc: Location.LocationObject) => {
+      try {
+        const url = Backend.backend_url || "http://localhost:4000";
+        const lat = loc.coords.latitude;
+        const lng = loc.coords.longitude;
 
-  // const fetchRecommendedRestaurants = useCallback(
-  //   async (loc: Location.LocationObject) => {
-  //     try {
-  //       const url = process.env.BE_URL || "http://localhost:4000";
-  //       const lat = loc.coords.latitude;
-  //       const lng = loc.coords.longitude;
+        const response = await axios.get(
+          url + `/data/recommend/restaurant?lat=${lat}&lng=${lng}`
+        );
+        const data: RestaurantType[] = await response.data;
 
-  //       const response = await fetch(
-  //         url + `/data/locations?lat=${lat}&lng=${lng}`
-  //       );
-  //       const data: LocationType[] = await response.json();
+        setRestaurants(data);
+      } catch (error) {
+        console.log("error", error);
+      }
+    },
+    []
+  );
 
-  //       setLocations(data);
-  //     } catch (error) {
-  //       console.log("error", error);
-  //     }
-  //   },
-  //   []
-  // );
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
 
-  // useEffect(() => {
-  //   (async () => {
-  //     let { status } = await Location.requestForegroundPermissionsAsync();
-  //     if (status !== "granted") {
-  //       setErrorMsg("Permission to access location was denied");
-  //       return;
-  //     }
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      setIsLoading(true);
+      fetchRecommendedLocations(currentLocation);
+      fetchRecommendedRestaurants(currentLocation);
+      setIsLoading(false);
+      setLocation(currentLocation);
+    })();
+  }, []);
 
-  //     let currentLocation = await Location.getCurrentPositionAsync({});
-  //     fetchRecommendedLocations(currentLocation);
-  //     setLocation(currentLocation);
-  //   })();
-  // }, []);
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <Container>
       <View style={styles.section}>
@@ -96,7 +105,7 @@ export default function HomeScreen({
         </Text>
         <View style={styles.recommended}>
           <FlatList
-            data={TEMPRECOMLOCATION}
+            data={locations}
             keyExtractor={(item) => item.locationID.toString()}
             renderItem={({ item }) => (
               <RecommendedCard
@@ -117,17 +126,29 @@ export default function HomeScreen({
         </Text>
         <View style={styles.recommended}>
           <FlatList
-            data={TEMPRECOMRES}
-            keyExtractor={(item) => item.restaurantID.toString()}
+            data={restaurants}
+            keyExtractor={(item) =>
+              item.restaurantID
+                ? item.restaurantID.toString()
+                : item.locationID.toString()
+            }
             renderItem={({ item }) => (
               <RecommendedCard
-                name={item.restaurantName}
+                name={
+                  item.restaurantName
+                    ? item.restaurantName
+                    : item.locationtionName
+                }
                 {...item}
                 navigation={() => {
-                  restaurantNavigationHandler(
-                    item.locationID,
-                    item.restaurantID
-                  );
+                  if (item.restaurantID) {
+                    restaurantNavigationHandler(
+                      item.locationID,
+                      item.restaurantID
+                    );
+                  } else {
+                    locationNavigationHandler(item.locationID);
+                  }
                 }}
               />
             )}
