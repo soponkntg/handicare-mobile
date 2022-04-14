@@ -14,7 +14,7 @@ import {
   Image,
   ListItem,
 } from "react-native-elements";
-import * as Location from 'expo-location';
+import * as Location from "expo-location";
 
 const _openingDate = [
   "Mon 10.00 - 22.00",
@@ -57,25 +57,23 @@ export default function LocationScreen({
   const [location, setLocation] = useState<LocationInfoType>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const fetchRecommendedLocations = useCallback(async (loc: Location.LocationObject) => {
-  
-    try {
-      
-      const url = process.env.BE_URL || "http://localhost:4000";
-      const body = {
-        lat: loc.coords.latitude,
-        lng: loc.coords.longitude, 
-        locationId: route.params.locationID,
-      }
+  const fetchRecommendedLocations = useCallback(
+    async (loc: Location.LocationObject) => {
+      try {
+        const url = process.env.BE_URL || "http://localhost:4000";
+        const body = {
+          lat: loc.coords.latitude,
+          lng: loc.coords.longitude,
+          locationId: route.params.locationID,
+        };
 
-      const response = await fetch(url + `/data/location`, {
-        method: 'POST',
-        body: JSON.stringify(body),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-
-      });
+        const response = await fetch(url + `/data/location`, {
+          method: "POST",
+          body: JSON.stringify(body),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
       const data: LocationInfoType = await response.json();
       console.log(data);
@@ -89,8 +87,8 @@ export default function LocationScreen({
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
         return;
       }
 
@@ -100,9 +98,14 @@ export default function LocationScreen({
     })();
   }, []);
 
-  const locationIsExisted = location != undefined
-  const distance = (locationIsExisted && location.distance != null) ? +location.distance.toFixed(2) : 0;
-  const openingDate = locationIsExisted ? location.openTime.map(item => item.day+' '+item.time) : _openingDate;
+  const locationIsExisted = location != undefined;
+  const distance =
+    locationIsExisted && location.distance != null
+      ? +location.distance.toFixed(2)
+      : 0;
+  const openingDate = locationIsExisted
+    ? location.openTime.map((item) => item.day + " " + item.time)
+    : _openingDate;
   const images = locationIsExisted ? location.images : _resImage;
   const comments = locationIsExisted ? location.comments : [];
   const restaurants = locationIsExisted ? location.restaurants: [];
@@ -162,7 +165,12 @@ export default function LocationScreen({
               containerStyle={styles.picture}
               PlaceholderContent={<ActivityIndicator />}
               onPress={() => {
-                navigation.navigate("Restaurant", { restaurantID: item.restaurantId });
+                if (locationIsExisted) {
+                  navigation.navigate("Restaurant", {
+                    locationID: location?.locationId,
+                    restaurantID: item.restaurantId,
+                  });
+                }
               }}
             />
           )}
@@ -175,7 +183,6 @@ export default function LocationScreen({
             Comments
           </Text>
           <Button
-
             title="Add a comment"
             type="outline"
             containerStyle={{ width: 120, paddingHorizontal: 6 }}
