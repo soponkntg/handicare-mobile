@@ -80,6 +80,16 @@ export type MainStackScreenProps<Screen extends keyof MainStackParamList> =
     restaurants: RestaurantSummaryType[];
     toilets: ToiletType[];
   }
+
+  export interface LocationRestaurantInfoType extends LocationInfoType {
+    restaurantId: number;
+    restaurantName: string;
+    restaurantLocated: string;
+    logoURL: string;
+    floor: string;
+    entrance: string;
+    doorType: string;
+  }
   
   export interface CommentType {
     userId: number;
