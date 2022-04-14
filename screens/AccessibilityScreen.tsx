@@ -6,9 +6,14 @@ import { ElevatorDetail } from "../components/ElevatorDetail";
 import { ParkingDetail } from "../components/ParkingDetail";
 import { RampDetail } from "../components/RampDetail";
 
-import { ScrollContainer, Text } from "../components/Themed";
+import { Container, ScrollContainer, Text } from "../components/Themed";
 import { ToiletDetail } from "../components/ToiletDetail";
-import { ElevatorType, MainStackScreenProps, RampType } from "../types";
+import {
+  DoorType,
+  ElevatorType,
+  MainStackScreenProps,
+  RampType,
+} from "../types";
 
 export default function AccessibilityScreen({
   navigation,
@@ -26,195 +31,242 @@ export default function AccessibilityScreen({
   const doors = route.params.doors;
   const toilets = route.params.toilets;
 
+  const displayText = (str: string) => {
+    return str.length > 0 ? str : "-";
+  };
+  const displaySwitch = (b: boolean) => {
+    return b ? "Switch" : "No Usable Switch";
+  };
+  const displayHandrail = (b: boolean) => {
+    return b ? "Handrail" : "No handrail";
+  };
+  const displayEnoughSpace = (b: boolean) => {
+    return b ? "Available (vacant)" : "Not available";
+  };
+  const displayNearEntry = (b: boolean) => {
+    return b ? "Near entry" : "Not near entry";
+  };
+
   const elevatorsList = elevators.map((item) => {
-    return (<ElevatorDetail
-      // passable
-      location={item.located.length > 0 ? item.located : "-"}
-      button={item.switch ? "Switch" : "No Usable Switch"}
-      remark={item.remark.length ? item.remark : "-"}
-      key={"e"+item.id}
-    />)
+    return (
+      <ElevatorDetail
+        // passable
+        location={displayText(item.located)}
+        button={displaySwitch(item.switch)}
+        remark={displayText(item.remark)}
+        key={"e" + item.id}
+      />
+    );
   });
 
+  // <ElevatorDetail
+  //   location="Near parking and toilet"
+  //   button="Switch"
+  //   remark="The door is 80 cm wide"
+  // />
+
   const parkingsList = parkings.map((item) => {
-    return (<ParkingDetail
-      key={"p"+item.id}
-      location={item.located.length > 0 ? item.located : "-"}
-      floor={item.floor.length > 0 ? item.floor : "-"}
-      door={item.nearEntry ? "Near entry" : "Not near entry"}
-      car={item.enoughSpace ? "Available (vacant)": "Not available"}
-      remark={item.remark.length > 0 ? item.remark : "-"}
-    />)
+    return (
+      <ParkingDetail
+        key={"p" + item.id}
+        location={displayText(item.located)}
+        floor={displayText(item.floor)}
+        door={displayNearEntry(item.nearEntry)}
+        car={displayEnoughSpace(item.enoughSpace)}
+        remark={displayText(item.remark)}
+      />
+    );
   });
+
+  // <ParkingDetail
+  //   location="In the back of the mall"
+  //   floor="flat"
+  //   door="Near entry"
+  //   car="Available (vacant)"
+  //   remark="No disabled parking, but has valet service"
+  // />
 
   const toiletsList = toilets.map((item) => {
     return (
       <ToiletDetail
-        key={"t"+item.id}
-        location={item.located.length > 0 ? item.located : "-"}
-        floor={item.floor.length > 0 ? item.floor : "-"}
-        type={item.type.length > 0 ? item.type: "-"}
-        door={item.doorType.length > 0 ? item.doorType: "-"}
-        handrail={item.handrail ? "Handrail" : "No handrail"}
-        remark={item.remark.length > 0 ? item.remark : "-"}
+        key={"t" + item.id}
+        location={displayText(item.located)}
+        floor={displayText(item.floor)}
+        type={displayText(item.type)}
+        door={displayText(item.doorType)}
+        handrail={displayHandrail(item.handrail)}
+        remark={displayText(item.remark)}
       />
-    )
+    );
   });
 
-  const rampsList = {};
+  // <ToiletDetail
+  //   location="Location description + link"
+  //   floor="flat"
+  //   type="type"
+  //   door="Near entry"
+  //   handrail="handrail"
+  //   remark="No disabled parking, but has valet service"
+  // />
+
+  const rampsList = ramps.map((item) => {
+    return (
+      <RampDetail
+        key={"r" + item.id}
+        location={displayText(item.located)}
+        floor={displayText(item.floor)}
+        slope={displayText(item.slope)}
+        level={item.level.toString()}
+        handrail={displayHandrail(item.handrail)}
+        remark={displayText(item.remark)}
+      />
+    );
+  });
+
+  // <RampDetail
+  //   location="Location description + link"
+  //   floor="flat"
+  //   slope="slope"
+  //   level="level"
+  //   handrail="handrail"
+  //   remark="No disabled parking, but has valet service"
+  // />
 
   const doorsList = doors.map((item) => {
     return (
       <DoorDetail
-        key={"d"+item.id}
+        key={"d" + item.id}
         location={item.located.length > 0 ? item.located : "-"}
         floor={item.floor.length > 0 ? item.floor : "-"}
-        door={item.doorType.length > 0 ? item.doorType: "-"}
+        door={item.doorType.length > 0 ? item.doorType : "-"}
         remark={item.remark.length > 0 ? item.remark : "-"}
       />
-    )
-  });;
+    );
+  });
 
+  // <DoorDetail
+  //   location="Location description + link"
+  //   floor="flat"
+  //   door="door"
+  //   accessibility="accessibility"
+  //   remark="No disabled parking, but has valet service"
+  // />
 
   return (
     <ScrollContainer>
       <Text style={styles.title} bold>
         Accessibilities
       </Text>
-      <View style={styles.cardMargin}>
-        <Pressable
-          style={styles.header}
-          onPress={() => {
-            setElevatorExpanded((prev) => !prev);
-          }}
-        >
-          <Text lightColor="white" darkColor="white" bold>
-            Elevator
-          </Text>
-          <Ionicons
-            name={elevatorExpanded ? "caret-up" : "caret-down"}
-            size={18}
-            color="white"
-          />
-        </Pressable>
-        <View style={[styles.cardDetail, !elevatorExpanded && styles.hide]}>
-          {/* <ElevatorDetail
-            location="Near parking and toilet"
-            button="Switch"
-            remark="The door is 80 cm wide"
-          /> */}
-          {elevatorsList}
+      {elevatorsList.length > 0 && (
+        <View style={styles.cardMargin}>
+          <Pressable
+            style={styles.header}
+            onPress={() => {
+              setElevatorExpanded((prev) => !prev);
+            }}
+          >
+            <Text lightColor="white" darkColor="white" bold>
+              Elevator
+            </Text>
+            <Ionicons
+              name={elevatorExpanded ? "caret-up" : "caret-down"}
+              size={18}
+              color="white"
+            />
+          </Pressable>
+          <View style={[styles.cardDetail, !elevatorExpanded && styles.hide]}>
+            {elevatorsList}
+          </View>
         </View>
-      </View>
-      <View style={styles.cardMargin}>
-        <Pressable
-          style={styles.header}
-          onPress={() => {
-            setParkingExpanded((prev) => !prev);
-          }}
-        >
-          <Text lightColor="white" darkColor="white" bold>
-            Parking
-          </Text>
-          <Ionicons
-            name={parkingExpanded ? "caret-up" : "caret-down"}
-            size={18}
-            color="white"
-          />
-        </Pressable>
-        <View style={[styles.cardDetail, !parkingExpanded && styles.hide]}>
-          {/* <ParkingDetail
-            location="In the back of the mall"
-            floor="flat"
-            door="Near entry"
-            car="Available (vacant)"
-            remark="No disabled parking, but has valet service"
-          /> */}
-          {parkingsList}
+      )}
+      {parkingsList.length > 0 && (
+        <View style={styles.cardMargin}>
+          <Pressable
+            style={styles.header}
+            onPress={() => {
+              setParkingExpanded((prev) => !prev);
+            }}
+          >
+            <Text lightColor="white" darkColor="white" bold>
+              Parking
+            </Text>
+            <Ionicons
+              name={parkingExpanded ? "caret-up" : "caret-down"}
+              size={18}
+              color="white"
+            />
+          </Pressable>
+          <View style={[styles.cardDetail, !parkingExpanded && styles.hide]}>
+            {parkingsList}
+          </View>
         </View>
-      </View>
-      <View style={styles.cardMargin}>
-        <Pressable
-          style={styles.header}
-          onPress={() => {
-            setToiletExpanded((prev) => !prev);
-          }}
-        >
-          <Text lightColor="white" darkColor="white" bold>
-            Toilet
-          </Text>
-          <Ionicons
-            name={toiletExpanded ? "caret-up" : "caret-down"}
-            size={18}
-            color="white"
-          />
-        </Pressable>
-        <View style={[styles.cardDetail, !toiletExpanded && styles.hide]}>
-          {/* <ToiletDetail
-            location="Location description + link"
-            floor="flat"
-            type="type"
-            door="Near entry"
-            handrail="handrail"
-            remark="No disabled parking, but has valet service"
-          /> */}
-          {toiletsList}
+      )}
+      {toiletsList.length > 0 && (
+        <View style={styles.cardMargin}>
+          <Pressable
+            style={styles.header}
+            onPress={() => {
+              setToiletExpanded((prev) => !prev);
+            }}
+          >
+            <Text lightColor="white" darkColor="white" bold>
+              Toilet
+            </Text>
+            <Ionicons
+              name={toiletExpanded ? "caret-up" : "caret-down"}
+              size={18}
+              color="white"
+            />
+          </Pressable>
+          <View style={[styles.cardDetail, !toiletExpanded && styles.hide]}>
+            {toiletsList}
+          </View>
         </View>
-      </View>
-      <View style={styles.cardMargin}>
-        <Pressable
-          style={styles.header}
-          onPress={() => {
-            setRampExpanded((prev) => !prev);
-          }}
-        >
-          <Text lightColor="white" darkColor="white" bold>
-            Ramp
-          </Text>
-          <Ionicons
-            name={rampExpanded ? "caret-up" : "caret-down"}
-            size={18}
-            color="white"
-          />
-        </Pressable>
-        <View style={[styles.cardDetail, !rampExpanded && styles.hide]}>
-          <RampDetail
-            location="Location description + link"
-            floor="flat"
-            slope="slope"
-            level="level"
-            handrail="handrail"
-            remark="No disabled parking, but has valet service"
-          />
+      )}
+      {rampsList.length > 0 && (
+        <View style={styles.cardMargin}>
+          <Pressable
+            style={styles.header}
+            onPress={() => {
+              setRampExpanded((prev) => !prev);
+            }}
+          >
+            <Text lightColor="white" darkColor="white" bold>
+              Ramp
+            </Text>
+            <Ionicons
+              name={rampExpanded ? "caret-up" : "caret-down"}
+              size={18}
+              color="white"
+            />
+          </Pressable>
+          <View style={[styles.cardDetail, !rampExpanded && styles.hide]}>
+            {rampsList}
+          </View>
         </View>
-      </View>
-      <View style={styles.cardMargin}>
-        <Pressable
-          style={styles.header}
-          onPress={() => {
-            setDoorExpanded((prev) => !prev);
-          }}
-        >
-          <Text lightColor="white" darkColor="white" bold>
-            Door
-          </Text>
-          <Ionicons
-            name={doorExpanded ? "caret-up" : "caret-down"}
-            size={18}
-            color="white"
-          />
-        </Pressable>
-        <View style={[styles.cardDetail, !doorExpanded && styles.hide]}>
-          {/* <DoorDetail
-            location="Location description + link"
-            floor="flat"
-            door="door"
-            accessibility="accessibility"
-            remark="No disabled parking, but has valet service"
-          /> */}
-          {doorsList}
+      )}
+      {doorsList.length > 0 && (
+        <View style={styles.cardMargin}>
+          <Pressable
+            style={styles.header}
+            onPress={() => {
+              setDoorExpanded((prev) => !prev);
+            }}
+          >
+            <Text lightColor="white" darkColor="white" bold>
+              Door
+            </Text>
+            <Ionicons
+              name={doorExpanded ? "caret-up" : "caret-down"}
+              size={18}
+              color="white"
+            />
+          </Pressable>
+          <View style={[styles.cardDetail, !doorExpanded && styles.hide]}>
+            {doorsList}
+          </View>
         </View>
-      </View>
+      )}
     </ScrollContainer>
   );
 }

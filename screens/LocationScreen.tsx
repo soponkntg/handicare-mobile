@@ -15,6 +15,7 @@ import {
   ListItem,
 } from "react-native-elements";
 import * as Location from "expo-location";
+import ModalScreen from "./ModalScreen";
 
 const _openingDate = [
   "Mon 10.00 - 22.00",
@@ -118,7 +119,7 @@ export default function LocationScreen({
 
   return (
     <React.Fragment>
-      {isLoading && <Text>Loading...</Text>}
+      {isLoading && <ModalScreen/>}
       {!isLoading && <ScrollContainer>
       <PlaceTitle title={locationIsExisted ? location.locationName : "location"} distance={distance} />
       <LocationDetail
@@ -235,4 +236,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
   },
+  loading: {
+    position: 'absolute',
+    left: '50%',
+    marginTop: '100%',
+  }
 });

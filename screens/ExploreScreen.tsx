@@ -9,6 +9,7 @@ import {
   TEMPRECOMLOCATION,
 } from "../types";
 import * as Location from "expo-location";
+import ModalScreen from "./ModalScreen";
 
 export default function ExploreScreen({
   navigation,
@@ -37,6 +38,7 @@ export default function ExploreScreen({
         const data: LocationType[] = await response.json();
 
         setLocations(data);
+        setIsLoading(false)
         
       } catch (error) {
         console.log("error", error);
@@ -62,7 +64,7 @@ export default function ExploreScreen({
 
   return (
     <Container>
-      {isLoading && <Text style={styles.loading}>Loading...</Text>}
+      {isLoading && <ModalScreen/>}
       {!isLoading && 
       <React.Fragment>
         <Text style={styles.title} bold>
@@ -101,6 +103,4 @@ const styles = StyleSheet.create({
     left: '50%',
     marginTop: '100%',
   }
-
-
 });
