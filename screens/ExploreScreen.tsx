@@ -13,7 +13,7 @@ import * as Location from "expo-location";
 export default function ExploreScreen({
   navigation,
 }: MainStackScreenProps<"Main">) {
-  const locationNavigationHandler = (locationID: string) => {
+  const locationNavigationHandler = (locationID: number) => {
     navigation.navigate("Location", { locationID });
   };
 
@@ -71,7 +71,7 @@ export default function ExploreScreen({
           <View style={styles.listContainer}>
           <FlatList
             data={locations}
-            keyExtractor={(item) => item.locationID}
+            keyExtractor={(item) => item.locationID.toString()}
             renderItem={({ item }) => (
               <LocationCard
                 {...item}
