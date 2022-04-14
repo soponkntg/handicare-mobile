@@ -154,7 +154,13 @@ export default function RestaurantScreen({
         wheelchair={restaurantIsExisted ? restaurant.ramps.length > 0 : false}
         door={restaurantIsExisted ? restaurant.doors.length > 0 : false}
         navigateHandler={() => {
-          navigation.navigate("Accessibility");
+          navigation.navigate("Accessibility", {
+            elevators: [],
+            parkings: [],
+            toilets: [],
+            ramps: [],
+            doors: [],
+          });
         }}
       />
       <View>

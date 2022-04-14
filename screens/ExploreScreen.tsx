@@ -10,6 +10,7 @@ import {
   TEMPRECOMLOCATION,
 } from "../types";
 import * as Location from "expo-location";
+import ModalScreen from "./ModalScreen";
 
 export default function ExploreScreen({
   navigation,
@@ -22,6 +23,7 @@ export default function ExploreScreen({
     null
   );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [locations, setLocations] = useState<LocationType[]>([]);
 
   const fetchRecommendedLocations = useCallback(
@@ -37,6 +39,7 @@ export default function ExploreScreen({
         const data: LocationType[] = await response.json();
 
         setLocations(data);
+        setIsLoading(false);
       } catch (error) {
         console.log("error", error);
       }
@@ -45,6 +48,7 @@ export default function ExploreScreen({
   );
 
   useEffect(() => {
+    setIsLoading(true);
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
@@ -60,23 +64,28 @@ export default function ExploreScreen({
 
   return (
     <Container>
-      <Text style={styles.title} bold>
-        All locations
-      </Text>
-      <View style={styles.listContainer}>
-        <FlatList
-          data={locations}
-          keyExtractor={(item) => item.locationID.toString()}
-          renderItem={({ item }) => (
-            <LocationCard
-              {...item}
-              navigation={() => {
-                locationNavigationHandler(item.locationID);
-              }}
+      {isLoading && <ModalScreen />}
+      {!isLoading && (
+        <React.Fragment>
+          <Text style={styles.title} bold>
+            All locations
+          </Text>
+          <View style={styles.listContainer}>
+            <FlatList
+              data={locations}
+              keyExtractor={(item) => item.locationID.toString()}
+              renderItem={({ item }) => (
+                <LocationCard
+                  {...item}
+                  navigation={() => {
+                    locationNavigationHandler(item.locationID);
+                  }}
+                />
+              )}
             />
-          )}
-        />
-      </View>
+          </View>
+        </React.Fragment>
+      )}
     </Container>
   );
 }
@@ -88,5 +97,10 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     alignItems: "center",
+  },
+  loading: {
+    position: "absolute",
+    left: "50%",
+    marginTop: "100%",
   },
 });

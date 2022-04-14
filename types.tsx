@@ -36,7 +36,13 @@ export type MainStackParamList = {
   Main: undefined;
   Location: { locationID: number };
   Restaurant: { locationID: number; restaurantID: number };
-  Accessibility: undefined;
+  Accessibility: {
+    elevators: ElevatorType[];
+    parkings: ParkingType[];
+    toilets: ToiletType[];
+    ramps: RampType[];
+    doors: DoorType[];
+  };
   Modal: undefined;
 };
 
@@ -171,6 +177,35 @@ export interface FacebookUserResponse {
   id: string;
 }
 
+export interface RestaurantType extends LocationType {
+  restaurantID: number | null;
+  restaurantName: string | null;
+}
+
+export interface GoogleUserResponse {
+  id: string;
+  email: string;
+  verified_email: boolean;
+  name: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
+  locale: string;
+}
+
+export interface FacebookUserResponse {
+  name: string;
+  picture: {
+    data: {
+      height: number;
+      is_silhouette: boolean;
+      url: string;
+      width: number;
+    };
+  };
+  id: string;
+}
+
 export interface UserDataType {
   token?: string;
   data?: {
@@ -185,6 +220,7 @@ export interface LatLngType {
   latitude?: number;
   longitude?: number;
 }
+
 export const TEMPRECOMLOCATION: LocationType[] = [
   {
     locationID: 1,
