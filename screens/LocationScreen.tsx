@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useCallback, useEffect } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { ScrollContainer, Text } from "../components/Themed";
-import { LocationInfoType, MainStackScreenProps } from "../types";
+import { BE_URL, LocationInfoType, MainStackScreenProps } from "../types";
 import { PlaceTitle } from "../components/PlaceTItile";
 import { LocationDetail } from "../components/LocationDetail";
 import { PlaceImage } from "../components/PlaceImage";
@@ -61,7 +61,7 @@ export default function LocationScreen({
   const fetchRecommendedLocations = useCallback(
     async (loc: Location.LocationObject) => {
       try {
-        const url = process.env.BE_URL || "http://localhost:4000";
+        const url = BE_URL || "http://localhost:4000";
         const body = {
           lat: loc.coords.latitude,
           lng: loc.coords.longitude,

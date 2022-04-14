@@ -181,6 +181,8 @@ export type MainStackScreenProps<Screen extends keyof MainStackParamList> =
     latitude?: number;
     longitude?: number;
   }
+
+  export const BE_URL: string = 'http://127.0.0.1:4000';
   export const TEMPRECOMLOCATION: LocationType[] = [
     {
       locationID: 1,
