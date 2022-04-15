@@ -110,6 +110,12 @@ export default function RestaurantScreen({
     : [];
   const images = restaurantIsExisted ? restaurant.images : [];
   const comments = restaurantIsExisted ? restaurant.comments : [];
+  const rating = restaurantIsExisted ? restaurant.rating : 0;
+  const elevators = restaurantIsExisted ? restaurant.elevators : [];
+  const parkings = restaurantIsExisted ? restaurant.parkings : [];
+  const toilets = restaurantIsExisted ? restaurant.toilets : [];
+  const ramps = restaurantIsExisted ? restaurant.ramps : [];
+  const doors = restaurantIsExisted ? restaurant.doors : [];
   return (
     <ScrollContainer>
       <PlaceTitle
@@ -147,19 +153,19 @@ export default function RestaurantScreen({
       />
       <PlaceImage images={images} />
       <Accessibility
-        rating={restaurantIsExisted ? restaurant.rating : 0}
-        elevator={restaurantIsExisted ? restaurant.elevators.length > 0 : false}
-        parking={restaurantIsExisted ? restaurant.parkings.length > 0 : false}
-        toilet={restaurantIsExisted ? restaurant.toilets.length > 0 : false}
-        wheelchair={restaurantIsExisted ? restaurant.ramps.length > 0 : false}
-        door={restaurantIsExisted ? restaurant.doors.length > 0 : false}
+        rating={rating}
+        elevator={elevators.length != 0}
+        parking={parkings.length != 0}
+        toilet={toilets.length != 0}
+        wheelchair={ramps.length != 0}
+        door={doors.length != 0}
         navigateHandler={() => {
           navigation.navigate("Accessibility", {
-            elevators: [],
-            parkings: [],
-            toilets: [],
-            ramps: [],
-            doors: [],
+            elevators: elevators,
+            parkings: parkings,
+            toilets: toilets,
+            ramps: ramps,
+            doors: doors,
           });
         }}
       />
