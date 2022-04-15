@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Linking, Platform, Pressable, StyleSheet, View } from "react-native";
 import { Text } from "./Themed";
 import {
   FontAwesome5,
@@ -28,6 +28,17 @@ export function RestaurantDetail({
   const openGoogleMap = () => {
     openMap({ latitude: 37.865101, longitude: -119.53833, provider: "google" });
   };
+  const onPressMobileNumberClick = () => {
+    const number = "0641744793";
+    let phoneNumber = "";
+    if (Platform.OS === "android") {
+      phoneNumber = `tel:${number}`;
+    } else {
+      phoneNumber = `telprompt:${number}`;
+    }
+
+    Linking.openURL(phoneNumber);
+  };
 
   return (
     <View style={{ marginBottom: 32 }}>
@@ -46,6 +57,17 @@ export function RestaurantDetail({
           onPress={openGoogleMap}
         >
           {location}
+        </Text>
+      </View>
+      <View style={styles.row}>
+        <MaterialCommunityIcons name="phone" size={20} color="#2F54EB" />
+        <Text
+          style={[styles.iconMargin, styles.locationText]}
+          lightColor="#595959"
+          darkColor="white"
+          onPress={onPressMobileNumberClick}
+        >
+          0641744793
         </Text>
       </View>
       <View style={styles.row}>

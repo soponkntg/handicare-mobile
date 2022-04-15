@@ -10,9 +10,13 @@ import {
   AirbnbRating,
   Avatar,
   Button,
+  Dialog,
   Image,
+  Input,
   ListItem,
 } from "react-native-elements";
+import { AuthContext } from "../context/authContext";
+import { Ionicons } from "@expo/vector-icons";
 
 const openingDate = [
   "Mon 10.00 - 22.00",
@@ -49,8 +53,102 @@ export default function LocationScreen({
   navigation,
   route,
 }: MainStackScreenProps<"Location">) {
+  const [modal, setModal] = React.useState(false);
+  const [rating, setRating] = React.useState(5);
+  const [comment, setComment] = React.useState<string>();
+  const { userData, latlng } = React.useContext(AuthContext);
+  const toogleModal = () => {
+    setModal((prev) => !prev);
+  };
+  const submitComment = () => {
+    console.log(rating);
+    console.log(comment);
+  };
+  console.log(latlng);
+  const Modal = () => {
+    return (
+      <Dialog isVisible={modal} overlayStyle={{ borderRadius: 16 }}>
+        {userData.token && userData.data ? (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Ionicons
+              name="close"
+              size={20}
+              color="black"
+              style={{
+                alignSelf: "flex-start",
+                position: "absolute",
+                top: 0,
+                left: 4,
+              }}
+              onPress={toogleModal}
+            />
+            <Text style={{ fontSize: 16 }} bold>
+              Rate this place
+            </Text>
+            <AirbnbRating
+              showRating={false}
+              defaultRating={5}
+              size={26}
+              starContainerStyle={{ marginVertical: 16 }}
+              onFinishRating={(rating) => {
+                setRating(rating);
+              }}
+            />
+            <Input
+              placeholder="write a comment"
+              inputContainerStyle={{
+                borderRadius: 1,
+                borderColor: "#E0E0E0",
+                borderWidth: 1,
+                padding: 10,
+              }}
+              inputStyle={{ fontSize: 14 }}
+              multiline
+              onChangeText={(value) => {
+                setComment(value);
+              }}
+            />
+            <Button
+              title="Submit"
+              containerStyle={{ width: 120, paddingHorizontal: 6 }}
+              titleStyle={{ fontSize: 12 }}
+              buttonStyle={{ borderRadius: 12 }}
+              onPress={submitComment}
+            />
+          </View>
+        ) : (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{ fontSize: 20, textAlign: "center", marginBottom: 16 }}
+              bold
+            >
+              Please login before comment
+            </Text>
+            <Button
+              title="Close"
+              containerStyle={{ width: 120, paddingHorizontal: 6 }}
+              titleStyle={{ fontSize: 12 }}
+              buttonStyle={{ borderRadius: 12 }}
+              onPress={toogleModal}
+            />
+          </View>
+        )}
+      </Dialog>
+    );
+  };
   return (
     <ScrollContainer>
+      <Modal />
       <PlaceTitle title="Location" distance={1.7} />
       <LocationDetail
         catagory="catagory"
@@ -108,6 +206,7 @@ export default function LocationScreen({
             containerStyle={{ width: 120, paddingHorizontal: 6 }}
             titleStyle={{ fontSize: 12 }}
             buttonStyle={{ borderRadius: 12 }}
+            onPress={toogleModal}
           />
         </View>
         {list.map((value, index) => (
