@@ -12,7 +12,7 @@ import axios from "axios";
 import Backend from "../constants/Backend";
 import * as Location from "expo-location";
 
-const openingDate = [
+const _openingDate = [
   "Mon 10.00 - 22.00",
   "Mon 10.00 - 22.00",
   "Mon 10.00 - 22.00",
@@ -20,7 +20,7 @@ const openingDate = [
   "Mon 10.00 - 22.00",
 ];
 
-const resImage = [
+const _resImage = [
   "https://www.siamfuture.com/images/content/projects/j_avenue/j_avenue-1.jpg",
   "https://www.siamfuture.com/images/content/projects/j_avenue/j_avenue-4.jpg",
   "https://img.wongnai.com/p/1920x0/2020/01/22/37270d2bda7447b58c70aa0b7ed7e87f.jpg",
@@ -28,7 +28,7 @@ const resImage = [
   "https://api.soimilk.com/sites/default/files/u143208/j_avenue-21_2.jpg",
 ];
 
-const list = [
+const _list = [
   {
     name: "Amy Farha",
     avatar_url: "http://www.bradshawfoundation.com/bfnews/uploads/erectus2.jpg",
