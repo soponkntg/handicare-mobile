@@ -53,7 +53,7 @@ export const AuthContextProvider = (props: {
         loginOption: "google",
       });
     } catch (e) {
-      console.log(e.message);
+      console.log(e);
     }
   };
 
@@ -68,7 +68,7 @@ export const AuthContextProvider = (props: {
         loginOption: "facebook",
       });
     } catch (e) {
-      console.log(e.message);
+      console.log(e);
     }
   };
 

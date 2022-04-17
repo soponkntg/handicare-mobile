@@ -7,6 +7,7 @@ import * as Google from "expo-auth-session/providers/google";
 import { Container, Text } from "../components/Themed";
 import * as WebBrowser from "expo-web-browser";
 import { AuthContext } from "../context/authContext";
+import { Loading } from "../components/Loading";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -45,7 +46,6 @@ export default function ProfileScreen() {
     }
   }, [faceResponse]);
 
-  console.log(latlng);
   return (
     <Container>
       <View style={{ height: "100%", alignItems: "center", paddingTop: 32 }}>

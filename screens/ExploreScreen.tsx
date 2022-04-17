@@ -3,8 +3,8 @@ import { FlatList, StyleSheet, View } from "react-native";
 import LocationCard from "../components/LocationCard";
 
 import { Container, Text } from "../components/Themed";
+import Backend from "../constants/Backend";
 import {
-  BE_URL,
   LocationType,
   MainStackScreenProps,
   TEMPRECOMLOCATION,
@@ -29,7 +29,7 @@ export default function ExploreScreen({
   const fetchRecommendedLocations = useCallback(
     async (loc: Location.LocationObject) => {
       try {
-        const url = BE_URL || "http://localhost:4000";
+        const url = Backend.backend_url || "http://localhost:4000";
         const lat = loc.coords.latitude;
         const lng = loc.coords.longitude;
 
@@ -39,8 +39,7 @@ export default function ExploreScreen({
         const data: LocationType[] = await response.json();
 
         setLocations(data);
-        setIsLoading(false)
-        
+        setIsLoading(false);
       } catch (error) {
         console.log("error", error);
       }
@@ -65,28 +64,28 @@ export default function ExploreScreen({
 
   return (
     <Container>
-      {isLoading && <ModalScreen/>}
-      {!isLoading && 
-      <React.Fragment>
-        <Text style={styles.title} bold>
-          All locations
-        </Text>
+      {isLoading && <ModalScreen />}
+      {!isLoading && (
+        <React.Fragment>
+          <Text style={styles.title} bold>
+            All locations
+          </Text>
           <View style={styles.listContainer}>
-          <FlatList
-            data={locations}
-            keyExtractor={(item) => item.locationID.toString()}
-            renderItem={({ item }) => (
-              <LocationCard
-                {...item}
-                navigation={() => {
-                  locationNavigationHandler(item.locationID);
-                }}
-              />
-            )}
-          />
-        </View>
-      </React.Fragment>
-      }
+            <FlatList
+              data={locations}
+              keyExtractor={(item) => item.locationID.toString()}
+              renderItem={({ item }) => (
+                <LocationCard
+                  {...item}
+                  navigation={() => {
+                    locationNavigationHandler(item.locationID);
+                  }}
+                />
+              )}
+            />
+          </View>
+        </React.Fragment>
+      )}
     </Container>
   );
 }
@@ -100,8 +99,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   loading: {
-    position: 'absolute',
-    left: '50%',
-    marginTop: '100%',
-  }
+    position: "absolute",
+    left: "50%",
+    marginTop: "100%",
+  },
 });

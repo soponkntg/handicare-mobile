@@ -2,11 +2,12 @@ import React from "react";
 import { useState, useCallback, useEffect } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { ScrollContainer, Text } from "../components/Themed";
-import { BE_URL, LocationInfoType, MainStackScreenProps } from "../types";
+import { LocationInfoType, MainStackScreenProps } from "../types";
 import { PlaceTitle } from "../components/PlaceTItile";
 import { LocationDetail } from "../components/LocationDetail";
 import { PlaceImage } from "../components/PlaceImage";
 import { Accessibility } from "../components/Accessibility";
+import Backend from "../constants/Backend";
 import {
   AirbnbRating,
   Avatar,
@@ -52,8 +53,8 @@ export default function LocationScreen({
   navigation,
   route,
 }: MainStackScreenProps<"Location">) {
-
-  const [currentLocation, setCurrentLocation] = useState<Location.LocationObject | null>(null);
+  const [currentLocation, setCurrentLocation] =
+    useState<Location.LocationObject | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [location, setLocation] = useState<LocationInfoType>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -61,7 +62,7 @@ export default function LocationScreen({
   const fetchRecommendedLocations = useCallback(
     async (loc: Location.LocationObject) => {
       try {
-        const url = BE_URL || "http://localhost:4000";
+        const url = Backend.backend_url || "http://localhost:4000";
         const body = {
           lat: loc.coords.latitude,
           lng: loc.coords.longitude,
@@ -76,14 +77,16 @@ export default function LocationScreen({
           },
         });
 
-      const data: LocationInfoType = await response.json();
-      console.log(data);
-      setLocation(data);
-      setIsLoading(false);
-    } catch (error) {
-      console.log('error',error);
-    }
-  },[]);
+        const data: LocationInfoType = await response.json();
+        console.log(data);
+        setLocation(data);
+        setIsLoading(false);
+      } catch (error) {
+        console.log("error", error);
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     (async () => {
@@ -109,7 +112,7 @@ export default function LocationScreen({
     : _openingDate;
   const images = locationIsExisted ? location.images : _resImage;
   const comments = locationIsExisted ? location.comments : [];
-  const restaurants = locationIsExisted ? location.restaurants: [];
+  const restaurants = locationIsExisted ? location.restaurants : [];
   const rating = locationIsExisted ? location.rating : 0;
   const elevators = locationIsExisted ? location.elevators : [];
   const parkings = locationIsExisted ? location.parkings : [];
@@ -119,105 +122,110 @@ export default function LocationScreen({
 
   return (
     <React.Fragment>
-      {isLoading && <ModalScreen/>}
-      {!isLoading && <ScrollContainer>
-      <PlaceTitle title={locationIsExisted ? location.locationName : "location"} distance={distance} />
-      <LocationDetail
-        catagory={locationIsExisted ? location.category : "category"}
-        location={locationIsExisted ? location.located : "address"}
-        openingDate={openingDate}
-      />
-      <PlaceImage images={images} />
-      <Accessibility
-        rating={rating}
-        elevator={elevators.length != 0}
-        parking={parkings.length != 0}
-        toilet={toilets.length != 0}
-        wheelchair={ramps.length != 0}
-        door={doors.length != 0}
-        navigateHandler={() => {
-          navigation.navigate("Accessibility", {
-            elevators: elevators,
-            parkings: parkings,
-            toilets: toilets,
-            ramps: ramps,
-            doors: doors,
-        });
-      }}
-      />
-      <View style={{ marginBottom: 32 }}>
-        <Text style={{ fontSize: 16 }} bold>
-          Restaurants
-        </Text>
-        <FlatList
-          data={restaurants}
-          keyExtractor={(item) => {
-            return (
-              item.toString() +
-              new Date().getTime().toString() +
-              Math.floor(
-                Math.random() * Math.floor(new Date().getTime())
-              ).toString()
-            );
-          }}
-          renderItem={({ item }) => (
-            <Image
-              source={{ uri: item.logoURL }}
-              containerStyle={styles.picture}
-              PlaceholderContent={<ActivityIndicator />}
-              onPress={() => {
-                if (locationIsExisted) {
-                  navigation.navigate("Restaurant", {
-                    locationID: location?.locationId,
-                    restaurantID: item.restaurantId,
-                  });
-                }
-              }}
-            />
-          )}
-          horizontal
-        />
-      </View>
-      <View>
-        <View style={styles.rowSapce}>
-          <Text style={{ fontSize: 16 }} bold>
-            Comments
-          </Text>
-          <Button
-            title="Add a comment"
-            type="outline"
-            containerStyle={{ width: 120, paddingHorizontal: 6 }}
-            titleStyle={{ fontSize: 12 }}
-            buttonStyle={{ borderRadius: 12 }}
+      {isLoading && <ModalScreen />}
+      {!isLoading && (
+        <ScrollContainer>
+          <PlaceTitle
+            title={locationIsExisted ? location.locationName : "location"}
+            distance={distance}
           />
-        </View>
-        {comments.map((value, index) => (
-          <ListItem key={index}>
-            <Avatar
-              rounded
-              title="PF"
-              source={{ uri: value.profileImageURL }}
-              imageProps={{ resizeMode: "contain" }}
-            />
-            <ListItem.Content>
-              <View style={styles.rowSapce}>
-                <Text style={{ fontSize: 12 }} bold>
-                  {value.userName}
-                </Text>
-                <AirbnbRating
-                  isDisabled={true}
-                  showRating={false}
-                  size={12}
-                  defaultRating={value.rating}
-                  selectedColor="#85A5FF"
+          <LocationDetail
+            catagory={locationIsExisted ? location.category : "category"}
+            location={locationIsExisted ? location.located : "address"}
+            openingDate={openingDate}
+          />
+          <PlaceImage images={images} />
+          <Accessibility
+            rating={rating}
+            elevator={elevators.length != 0}
+            parking={parkings.length != 0}
+            toilet={toilets.length != 0}
+            wheelchair={ramps.length != 0}
+            door={doors.length != 0}
+            navigateHandler={() => {
+              navigation.navigate("Accessibility", {
+                elevators: elevators,
+                parkings: parkings,
+                toilets: toilets,
+                ramps: ramps,
+                doors: doors,
+              });
+            }}
+          />
+          <View style={{ marginBottom: 32 }}>
+            <Text style={{ fontSize: 16 }} bold>
+              Restaurants
+            </Text>
+            <FlatList
+              data={restaurants}
+              keyExtractor={(item) => {
+                return (
+                  item.toString() +
+                  new Date().getTime().toString() +
+                  Math.floor(
+                    Math.random() * Math.floor(new Date().getTime())
+                  ).toString()
+                );
+              }}
+              renderItem={({ item }) => (
+                <Image
+                  source={{ uri: item.logoURL }}
+                  containerStyle={styles.picture}
+                  PlaceholderContent={<ActivityIndicator />}
+                  onPress={() => {
+                    if (locationIsExisted) {
+                      navigation.navigate("Restaurant", {
+                        locationID: location?.locationId,
+                        restaurantID: item.restaurantId,
+                      });
+                    }
+                  }}
                 />
-              </View>
-              <Text style={{ fontSize: 12 }}>{value.message}</Text>
-            </ListItem.Content>
-          </ListItem>
-        ))}
-      </View>
-    </ScrollContainer>}
+              )}
+              horizontal
+            />
+          </View>
+          <View>
+            <View style={styles.rowSapce}>
+              <Text style={{ fontSize: 16 }} bold>
+                Comments
+              </Text>
+              <Button
+                title="Add a comment"
+                type="outline"
+                containerStyle={{ width: 120, paddingHorizontal: 6 }}
+                titleStyle={{ fontSize: 12 }}
+                buttonStyle={{ borderRadius: 12 }}
+              />
+            </View>
+            {comments.map((value, index) => (
+              <ListItem key={index}>
+                <Avatar
+                  rounded
+                  title="PF"
+                  source={{ uri: value.profileImageURL }}
+                  imageProps={{ resizeMode: "contain" }}
+                />
+                <ListItem.Content>
+                  <View style={styles.rowSapce}>
+                    <Text style={{ fontSize: 12 }} bold>
+                      {value.userName}
+                    </Text>
+                    <AirbnbRating
+                      isDisabled={true}
+                      showRating={false}
+                      size={12}
+                      defaultRating={value.rating}
+                      selectedColor="#85A5FF"
+                    />
+                  </View>
+                  <Text style={{ fontSize: 12 }}>{value.message}</Text>
+                </ListItem.Content>
+              </ListItem>
+            ))}
+          </View>
+        </ScrollContainer>
+      )}
     </React.Fragment>
   );
 }
@@ -237,8 +245,8 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   loading: {
-    position: 'absolute',
-    left: '50%',
-    marginTop: '100%',
-  }
+    position: "absolute",
+    left: "50%",
+    marginTop: "100%",
+  },
 });
