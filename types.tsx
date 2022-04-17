@@ -122,20 +122,20 @@ export interface OpenResponseType {
   time: string;
 }
 
-export interface ParkingType {
+export interface ParkingType extends Accessibility{
   enoughSpace: boolean;
   nearEntry: boolean;
   floor: string;
 }
 
-export interface RampType {
+export interface RampType extends Accessibility{
   slope: string;
   level: number;
   handrail: boolean;
   floor: string;
 }
 
-export interface ToiletType {
+export interface ToiletType extends Accessibility{
   type: string;
   doorType: string;
   handrail: boolean;
