@@ -14,7 +14,9 @@ export default function ProfileScreen() {
   const { latlng, loginHandler, userData, logoutHandler } =
     useContext(AuthContext);
 
-  const [googleRequest, gooeleResponse, googlePromptAsync] =
+
+
+  const [googleRequest, googleResponse, googlePromptAsync] =
     Google.useAuthRequest({
       expoClientId:
         "68092276774-pd425gfokt9lbl3ngadk7lf6rjd8v6n3.apps.googleusercontent.com",
@@ -26,11 +28,16 @@ export default function ProfileScreen() {
     expoClientId: "1983457675169499",
   });
 
+  console.log('user data', userData)
+  console.log('google',googleRequest, googleResponse)
+  console.log('facebook', faceRequest, faceResponse)
+
+
   React.useEffect(() => {
-    if (gooeleResponse?.type === "success" && gooeleResponse.authentication) {
-      loginHandler(gooeleResponse.authentication.accessToken, "google");
+    if (googleResponse?.type === "success" && googleResponse.authentication) {
+      loginHandler(googleResponse.authentication.accessToken, "google");
     }
-  }, [gooeleResponse]);
+  }, [googleResponse]);
 
   React.useEffect(() => {
     if (faceResponse?.type === "success" && faceResponse.authentication) {
