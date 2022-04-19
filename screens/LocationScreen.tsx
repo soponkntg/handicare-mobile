@@ -12,11 +12,14 @@ import {
   AirbnbRating,
   Avatar,
   Button,
+  Dialog,
   Image,
+  Input,
   ListItem,
 } from "react-native-elements";
 import * as Location from "expo-location";
-import ModalScreen from "./ModalScreen";
+import { AuthContext } from "../context/authContext";
+import { Ionicons } from "@expo/vector-icons";
 
 const _openingDate = [
   "Mon 10.00 - 22.00",
@@ -53,6 +56,14 @@ export default function LocationScreen({
   navigation,
   route,
 }: MainStackScreenProps<"Location">) {
+  const [modal, setModal] = React.useState(false);
+  const [rating, setRating] = React.useState<number>(0);
+  const [comment, setComment] = React.useState<string>();
+  const { userData, latlng } = React.useContext(AuthContext);
+  const toogleModal = () => {
+    setModal((prev) => !prev);
+  };
+
   const [currentLocation, setCurrentLocation] =
     useState<Location.LocationObject | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -113,120 +124,203 @@ export default function LocationScreen({
   const images = locationIsExisted ? location.images : _resImage;
   const comments = locationIsExisted ? location.comments : [];
   const restaurants = locationIsExisted ? location.restaurants : [];
-  const rating = locationIsExisted ? location.rating : 0;
+  const averageRating = locationIsExisted ? location.rating : 0;
   const elevators = locationIsExisted ? location.elevators : [];
   const parkings = locationIsExisted ? location.parkings : [];
   const toilets = locationIsExisted ? location.toilets : [];
   const ramps = locationIsExisted ? location.ramps : [];
   const doors = locationIsExisted ? location.doors : [];
 
-  return (
-    <React.Fragment>
-      {isLoading && <ModalScreen />}
-      {!isLoading && (
-        <ScrollContainer>
-          <PlaceTitle
-            title={locationIsExisted ? location.locationName : "location"}
-            distance={distance}
-          />
-          <LocationDetail
-            catagory={locationIsExisted ? location.category : "category"}
-            location={locationIsExisted ? location.located : "address"}
-            openingDate={openingDate}
-          />
-          <PlaceImage images={images} />
-          <Accessibility
-            rating={rating}
-            elevator={elevators.length != 0}
-            parking={parkings.length != 0}
-            toilet={toilets.length != 0}
-            wheelchair={ramps.length != 0}
-            door={doors.length != 0}
-            navigateHandler={() => {
-              navigation.navigate("Accessibility", {
-                elevators: elevators,
-                parkings: parkings,
-                toilets: toilets,
-                ramps: ramps,
-                doors: doors,
-              });
+  const submitComment = () => {
+    console.log(rating);
+    console.log(comment);
+  };
+  console.log(latlng);
+  const Modal = () => {
+    return (
+      <Dialog isVisible={modal} overlayStyle={{ borderRadius: 16 }}>
+        {userData.token && userData.data ? (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
             }}
-          />
-          <View style={{ marginBottom: 32 }}>
-            <Text style={{ fontSize: 16 }} bold>
-              Restaurants
-            </Text>
-            <FlatList
-              data={restaurants}
-              keyExtractor={(item) => {
-                return (
-                  item.toString() +
-                  new Date().getTime().toString() +
-                  Math.floor(
-                    Math.random() * Math.floor(new Date().getTime())
-                  ).toString()
-                );
+          >
+            <Ionicons
+              name="close"
+              size={20}
+              color="black"
+              style={{
+                alignSelf: "flex-start",
+                position: "absolute",
+                top: 0,
+                left: 4,
               }}
-              renderItem={({ item }) => (
-                <Image
-                  source={{ uri: item.logoURL }}
-                  containerStyle={styles.picture}
-                  PlaceholderContent={<ActivityIndicator />}
-                  onPress={() => {
-                    if (locationIsExisted) {
-                      navigation.navigate("Restaurant", {
-                        locationID: location?.locationId,
-                        restaurantID: item.restaurantId,
-                      });
-                    }
-                  }}
-                />
-              )}
-              horizontal
+              onPress={toogleModal}
+            />
+            <Text style={{ fontSize: 16 }} bold>
+              Rate this place
+            </Text>
+            <AirbnbRating
+              showRating={false}
+              defaultRating={5}
+              size={26}
+              starContainerStyle={{ marginVertical: 16 }}
+              onFinishRating={(rating) => {
+                setRating(rating);
+              }}
+            />
+            <Input
+              placeholder="write a comment"
+              inputContainerStyle={{
+                borderRadius: 1,
+                borderColor: "#E0E0E0",
+                borderWidth: 1,
+                padding: 10,
+              }}
+              inputStyle={{ fontSize: 14 }}
+              multiline
+              onChangeText={(value) => {
+                setComment(value);
+              }}
+            />
+            <Button
+              title="Submit"
+              containerStyle={{ width: 120, paddingHorizontal: 6 }}
+              titleStyle={{ fontSize: 12 }}
+              buttonStyle={{ borderRadius: 12 }}
+              onPress={submitComment}
             />
           </View>
-          <View>
-            <View style={styles.rowSapce}>
-              <Text style={{ fontSize: 16 }} bold>
-                Comments
-              </Text>
-              <Button
-                title="Add a comment"
-                type="outline"
-                containerStyle={{ width: 120, paddingHorizontal: 6 }}
-                titleStyle={{ fontSize: 12 }}
-                buttonStyle={{ borderRadius: 12 }}
-              />
-            </View>
-            {comments.map((value, index) => (
-              <ListItem key={index}>
-                <Avatar
-                  rounded
-                  title="PF"
-                  source={{ uri: value.profileImageURL }}
-                  imageProps={{ resizeMode: "contain" }}
-                />
-                <ListItem.Content>
-                  <View style={styles.rowSapce}>
-                    <Text style={{ fontSize: 12 }} bold>
-                      {value.userName}
-                    </Text>
-                    <AirbnbRating
-                      isDisabled={true}
-                      showRating={false}
-                      size={12}
-                      defaultRating={value.rating}
-                      selectedColor="#85A5FF"
-                    />
-                  </View>
-                  <Text style={{ fontSize: 12 }}>{value.message}</Text>
-                </ListItem.Content>
-              </ListItem>
-            ))}
+        ) : (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{ fontSize: 20, textAlign: "center", marginBottom: 16 }}
+              bold
+            >
+              Please login before comment
+            </Text>
+            <Button
+              title="Close"
+              containerStyle={{ width: 120, paddingHorizontal: 6 }}
+              titleStyle={{ fontSize: 12 }}
+              buttonStyle={{ borderRadius: 12 }}
+              onPress={toogleModal}
+            />
           </View>
-        </ScrollContainer>
-      )}
-    </React.Fragment>
+        )}
+      </Dialog>
+    );
+  };
+
+  return (
+    <ScrollContainer>
+      <Modal />
+      <PlaceTitle
+        title={locationIsExisted ? location.locationName : "location"}
+        distance={distance}
+      />
+      <LocationDetail
+        catagory={locationIsExisted ? location.category : "category"}
+        location={locationIsExisted ? location.located : "address"}
+        openingDate={openingDate}
+      />
+      <PlaceImage images={images} />
+      <Accessibility
+        rating={averageRating}
+        elevator={elevators.length != 0}
+        parking={parkings.length != 0}
+        toilet={toilets.length != 0}
+        wheelchair={ramps.length != 0}
+        door={doors.length != 0}
+        navigateHandler={() => {
+          navigation.navigate("Accessibility", {
+            elevators: elevators,
+            parkings: parkings,
+            toilets: toilets,
+            ramps: ramps,
+            doors: doors,
+          });
+        }}
+      />
+      <View style={{ marginBottom: 32 }}>
+        <Text style={{ fontSize: 16 }} bold>
+          Restaurants
+        </Text>
+        <FlatList
+          data={restaurants}
+          keyExtractor={(item) => {
+            return (
+              item.toString() +
+              new Date().getTime().toString() +
+              Math.floor(
+                Math.random() * Math.floor(new Date().getTime())
+              ).toString()
+            );
+          }}
+          renderItem={({ item }) => (
+            <Image
+              source={{ uri: item.logoURL }}
+              containerStyle={styles.picture}
+              PlaceholderContent={<ActivityIndicator />}
+              onPress={() => {
+                if (locationIsExisted) {
+                  navigation.navigate("Restaurant", {
+                    locationID: location?.locationId,
+                    restaurantID: item.restaurantId,
+                  });
+                }
+              }}
+            />
+          )}
+          horizontal
+        />
+      </View>
+      <View>
+        <View style={styles.rowSapce}>
+          <Text style={{ fontSize: 16 }} bold>
+            Comments
+          </Text>
+          <Button
+            title="Add a comment"
+            type="outline"
+            containerStyle={{ width: 120, paddingHorizontal: 6 }}
+            titleStyle={{ fontSize: 12 }}
+            buttonStyle={{ borderRadius: 12 }}
+          />
+        </View>
+        {comments.map((value, index) => (
+          <ListItem key={index}>
+            <Avatar
+              rounded
+              title="PF"
+              source={{ uri: value.profileImageURL }}
+              imageProps={{ resizeMode: "contain" }}
+            />
+            <ListItem.Content>
+              <View style={styles.rowSapce}>
+                <Text style={{ fontSize: 12 }} bold>
+                  {value.userName}
+                </Text>
+                <AirbnbRating
+                  isDisabled={true}
+                  showRating={false}
+                  size={12}
+                  defaultRating={value.rating}
+                  selectedColor="#85A5FF"
+                />
+              </View>
+              <Text style={{ fontSize: 12 }}>{value.message}</Text>
+            </ListItem.Content>
+          </ListItem>
+        ))}
+      </View>
+    </ScrollContainer>
   );
 }
 

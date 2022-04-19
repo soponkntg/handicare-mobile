@@ -6,6 +6,7 @@ import {
   LatLngType,
   UserDataType,
 } from "../types";
+import * as Location from "expo-location";
 
 interface ContextType {
   userData: UserDataType;
@@ -15,7 +16,6 @@ interface ContextType {
     loginOption: "facebook" | "google"
   ) => void;
   logoutHandler: () => void;
-  locationHandler: (latitude: number, longtitude: number) => void;
 }
 
 export const AuthContext = React.createContext<ContextType>({
@@ -23,7 +23,6 @@ export const AuthContext = React.createContext<ContextType>({
   latlng: { latitude: undefined, longitude: undefined },
   loginHandler: (tokenString: string, loginOption: "facebook" | "google") => {},
   logoutHandler: () => {},
-  locationHandler: (latitude: number, longitude: number) => {},
 });
 
 export const AuthContextProvider = (props: {
@@ -73,6 +72,17 @@ export const AuthContextProvider = (props: {
   };
 
   useEffect(() => {
+    // Locations
+    const getLogation = async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        return;
+      }
+      const { coords } = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = coords;
+      setLatLng({ latitude, longitude });
+    };
+
     if (userData.token) {
       switch (userData.loginOption) {
         case "google":
@@ -81,6 +91,7 @@ export const AuthContextProvider = (props: {
           fetchFacebookData(userData.token);
       }
     }
+    getLogation();
   }, []);
 
   const loginHandler = (token: string, loginOption: "facebook" | "google") => {
@@ -100,15 +111,9 @@ export const AuthContextProvider = (props: {
     });
   };
 
-  const locationHandler = (latitude: number, longitude: number) => {
-    setLatLng({
-      latitude,
-      longitude,
-    });
-  };
   return (
     <AuthContext.Provider
-      value={{ loginHandler, userData, logoutHandler, latlng, locationHandler }}
+      value={{ loginHandler, userData, logoutHandler, latlng }}
     >
       {props.children}
     </AuthContext.Provider>

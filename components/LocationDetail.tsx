@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Linking, Platform, Pressable, StyleSheet, View } from "react-native";
 import { Text } from "./Themed";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import openMap from "react-native-open-maps";
@@ -16,6 +16,17 @@ export function LocationDetail({ catagory, location, openingDate }: Props) {
   const openGoogleMap = () => {
     openMap({ latitude: 37.865101, longitude: -119.53833, provider: "google" });
   };
+  const onPressMobileNumberClick = () => {
+    const number = "0641744793";
+    let phoneNumber = "";
+    if (Platform.OS === "android") {
+      phoneNumber = `tel:${number}`;
+    } else {
+      phoneNumber = `telprompt:${number}`;
+    }
+
+    Linking.openURL(phoneNumber);
+  };
 
   return (
     <View style={{ marginBottom: 32 }}>
@@ -25,7 +36,7 @@ export function LocationDetail({ catagory, location, openingDate }: Props) {
           {catagory}
         </Text>
       </View>
-      <View style={[styles.row, { marginVertical: 10 }]}>
+      <View style={styles.row}>
         <Ionicons name="location-sharp" size={20} color="#2F54EB" />
         <Text
           style={[styles.iconMargin, styles.locationText]}
@@ -34,6 +45,17 @@ export function LocationDetail({ catagory, location, openingDate }: Props) {
           onPress={openGoogleMap}
         >
           {location}
+        </Text>
+      </View>
+      <View style={styles.row}>
+        <MaterialCommunityIcons name="phone" size={20} color="#2F54EB" />
+        <Text
+          style={[styles.iconMargin, styles.locationText]}
+          lightColor="#595959"
+          darkColor="white"
+          onPress={onPressMobileNumberClick}
+        >
+          0641744793
         </Text>
       </View>
       <View style={styles.row}>
@@ -82,6 +104,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "flex-start",
+    marginBottom: 10,
   },
   iconMargin: {
     marginLeft: 10,
