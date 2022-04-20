@@ -11,6 +11,7 @@ import { RestaurantDetail } from "../components/RestaurantDetail";
 import axios from "axios";
 import Backend from "../constants/Backend";
 import * as Location from "expo-location";
+import { AuthContext } from "../context/authContext";
 
 const _openingDate = [
   "Mon 10.00 - 22.00",
@@ -54,6 +55,10 @@ export default function RestaurantScreen({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [restaurant, setRestaurant] = useState<LocationRestaurantInfoType>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { userData, latlng } = React.useContext(AuthContext);
+
+  const [rating, setRating] = React.useState<number>(0);
+  const [comment, setComment] = React.useState<string>("");
 
   const fetchLocationRestuarantDeatail = useCallback(
     async (loc: Location.LocationObject) => {
@@ -79,6 +84,27 @@ export default function RestaurantScreen({
     },
     []
   );
+
+  const submitComment = async () => {
+
+    try {
+      const url = Backend.backend_url || "http://localhost:4000";
+      const commentBody = {
+        userId: userData.data?.id,
+        locationId: restaurant?.locationId,
+        restaurantId: restaurant?.restaurantId,
+        message: comment,
+        rating: rating,
+      };
+
+      const response = await axios.post(url + `/account/restaurant/comment`, commentBody);
+
+      console.log(response.data)
+    } catch (error) {
+      console.log("error", error);
+    }
+
+  };
 
   useEffect(() => {
     (async () => {
@@ -110,7 +136,7 @@ export default function RestaurantScreen({
     : [];
   const images = restaurantIsExisted ? restaurant.images : [];
   const comments = restaurantIsExisted ? restaurant.comments : [];
-  const rating = restaurantIsExisted ? restaurant.rating : 0;
+  const averageRating = restaurantIsExisted ? restaurant.rating : 0;
   const elevators = restaurantIsExisted ? restaurant.elevators : [];
   const parkings = restaurantIsExisted ? restaurant.parkings : [];
   const toilets = restaurantIsExisted ? restaurant.toilets : [];
@@ -153,7 +179,7 @@ export default function RestaurantScreen({
       />
       <PlaceImage images={images} />
       <Accessibility
-        rating={rating}
+        rating={averageRating}
         elevator={elevators.length != 0}
         parking={parkings.length != 0}
         toilet={toilets.length != 0}
