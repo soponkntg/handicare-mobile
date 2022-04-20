@@ -29,9 +29,9 @@ export default function ProfileScreen() {
     expoClientId: "1983457675169499",
   });
 
-  console.log('user data', userData)
-  console.log('google',googleRequest, googleResponse)
-  console.log('facebook', faceRequest, faceResponse)
+  console.log('user data', userData.data?.id, userData.data?.name, userData.data?.picture)
+  // console.log('google',googleRequest, googleResponse)
+  // console.log('facebook', faceRequest, faceResponse)
 
 
   React.useEffect(() => {

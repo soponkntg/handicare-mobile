@@ -20,6 +20,7 @@ import {
 import * as Location from "expo-location";
 import { AuthContext } from "../context/authContext";
 import { Ionicons } from "@expo/vector-icons";
+import axios from "axios";
 
 const _openingDate = [
   "Mon 10.00 - 22.00",
@@ -80,15 +81,9 @@ export default function LocationScreen({
           locationId: route.params.locationID,
         };
 
-        const response = await fetch(url + `/data/location`, {
-          method: "POST",
-          body: JSON.stringify(body),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await axios.post(url + `/data/location`, body);
 
-        const data: LocationInfoType = await response.json();
+        const data: LocationInfoType = await response.data;
         console.log(data);
         setLocation(data);
         setIsLoading(false);

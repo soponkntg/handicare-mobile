@@ -11,6 +11,7 @@ import {
 } from "../types";
 import * as Location from "expo-location";
 import ModalScreen from "./ModalScreen";
+import axios from "axios";
 
 export default function ExploreScreen({
   navigation,
@@ -33,10 +34,10 @@ export default function ExploreScreen({
         const lat = loc.coords.latitude;
         const lng = loc.coords.longitude;
 
-        const response = await fetch(
+        const response = await axios.get(
           url + `/data/locations?lat=${lat}&lng=${lng}`
         );
-        const data: LocationType[] = await response.json();
+        const data: LocationType[] = await response.data;
 
         setLocations(data);
         setIsLoading(false);
