@@ -50,7 +50,6 @@ export default function AccessibilityScreen({
   const elevatorsList = elevators.map((item) => {
     return (
       <ElevatorDetail
-        // passable
         location={displayText(item.located)}
         button={displaySwitch(item.switch)}
         remark={displayText(item.remark)}
@@ -58,12 +57,6 @@ export default function AccessibilityScreen({
       />
     );
   });
-
-  // <ElevatorDetail
-  //   location="Near parking and toilet"
-  //   button="Switch"
-  //   remark="The door is 80 cm wide"
-  // />
 
   const parkingsList = parkings.map((item) => {
     return (
@@ -77,14 +70,6 @@ export default function AccessibilityScreen({
       />
     );
   });
-
-  // <ParkingDetail
-  //   location="In the back of the mall"
-  //   floor="flat"
-  //   door="Near entry"
-  //   car="Available (vacant)"
-  //   remark="No disabled parking, but has valet service"
-  // />
 
   const toiletsList = toilets.map((item) => {
     return (
@@ -100,15 +85,6 @@ export default function AccessibilityScreen({
     );
   });
 
-  // <ToiletDetail
-  //   location="Location description + link"
-  //   floor="flat"
-  //   type="type"
-  //   door="Near entry"
-  //   handrail="handrail"
-  //   remark="No disabled parking, but has valet service"
-  // />
-
   const rampsList = ramps.map((item) => {
     return (
       <RampDetail
@@ -123,15 +99,6 @@ export default function AccessibilityScreen({
     );
   });
 
-  // <RampDetail
-  //   location="Location description + link"
-  //   floor="flat"
-  //   slope="slope"
-  //   level="level"
-  //   handrail="handrail"
-  //   remark="No disabled parking, but has valet service"
-  // />
-
   const doorsList = doors.map((item) => {
     return (
       <DoorDetail
@@ -143,14 +110,6 @@ export default function AccessibilityScreen({
       />
     );
   });
-
-  // <DoorDetail
-  //   location="Location description + link"
-  //   floor="flat"
-  //   door="door"
-  //   accessibility="accessibility"
-  //   remark="No disabled parking, but has valet service"
-  // />
 
   return (
     <ScrollContainer>

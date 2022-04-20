@@ -1,91 +1,67 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import LocationCard from "../components/LocationCard";
 
 import { Container, Text } from "../components/Themed";
 import Backend from "../constants/Backend";
-import {
-  LocationType,
-  MainStackScreenProps,
-  TEMPRECOMLOCATION,
-} from "../types";
-import * as Location from "expo-location";
-import ModalScreen from "./ModalScreen";
+import { LatLngType, LocationType, MainStackScreenProps } from "../types";
+import { Loading } from "../components/Loading";
+import { AuthContext } from "../context/authContext";
+import axios from "axios";
 
 export default function ExploreScreen({
   navigation,
 }: MainStackScreenProps<"Main">) {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [locations, setLocations] = useState<LocationType[]>([]);
+  const { latlng } = useContext(AuthContext);
+
   const locationNavigationHandler = (locationID: number) => {
     navigation.navigate("Location", { locationID });
   };
 
-  const [location, setLocation] = useState<Location.LocationObject | null>(
-    null
-  );
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [locations, setLocations] = useState<LocationType[]>([]);
+  const fetchRecommendedLocations = useCallback(async (loc: LatLngType) => {
+    try {
+      const url = Backend.backend_url || "http://localhost:4000";
+      const lat = loc.latitude;
+      const lng = loc.longitude;
 
-  const fetchRecommendedLocations = useCallback(
-    async (loc: Location.LocationObject) => {
-      try {
-        const url = Backend.backend_url || "http://localhost:4000";
-        const lat = loc.coords.latitude;
-        const lng = loc.coords.longitude;
-
-        const response = await fetch(
-          url + `/data/locations?lat=${lat}&lng=${lng}`
-        );
-        const data: LocationType[] = await response.json();
-
-        setLocations(data);
-        setIsLoading(false);
-      } catch (error) {
-        console.log("error", error);
-      }
-    },
-    []
-  );
-
-  useEffect(() => {
-    setIsLoading(true);
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
-
-      let currentLocation = await Location.getCurrentPositionAsync({});
-      fetchRecommendedLocations(currentLocation);
-      setLocation(currentLocation);
-    })();
+      const { data } = await axios.get<LocationType[]>(
+        url + `/data/locations?lat=${lat}&lng=${lng}`
+      );
+      setLocations(data);
+    } catch (error) {
+      console.log("error", error);
+    }
   }, []);
 
+  useEffect(() => {
+    fetchRecommendedLocations(latlng);
+    setIsLoading(false);
+  }, []);
+
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <Container>
-      {isLoading && <ModalScreen />}
-      {!isLoading && (
-        <React.Fragment>
-          <Text style={styles.title} bold>
-            All locations
-          </Text>
-          <View style={styles.listContainer}>
-            <FlatList
-              data={locations}
-              keyExtractor={(item) => item.locationID.toString()}
-              renderItem={({ item }) => (
-                <LocationCard
-                  {...item}
-                  navigation={() => {
-                    locationNavigationHandler(item.locationID);
-                  }}
-                />
-              )}
+      <Text style={styles.title} bold>
+        All locations
+      </Text>
+      <View style={styles.listContainer}>
+        <FlatList
+          data={locations}
+          keyExtractor={(item) => item.locationID.toString()}
+          renderItem={({ item }) => (
+            <LocationCard
+              {...item}
+              navigation={() => {
+                locationNavigationHandler(item.locationID);
+              }}
             />
-          </View>
-        </React.Fragment>
-      )}
+          )}
+        />
+      </View>
     </Container>
   );
 }

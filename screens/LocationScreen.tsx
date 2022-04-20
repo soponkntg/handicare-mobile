@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState, useCallback, useEffect } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { ScrollContainer, Text } from "../components/Themed";
-import { LocationInfoType, MainStackScreenProps } from "../types";
+import { LatLngType, LocationInfoType, MainStackScreenProps } from "../types";
 import { PlaceTitle } from "../components/PlaceTItile";
 import { LocationDetail } from "../components/LocationDetail";
 import { PlaceImage } from "../components/PlaceImage";
@@ -17,125 +17,62 @@ import {
   Input,
   ListItem,
 } from "react-native-elements";
-import * as Location from "expo-location";
 import { AuthContext } from "../context/authContext";
 import { Ionicons } from "@expo/vector-icons";
-
-const _openingDate = [
-  "Mon 10.00 - 22.00",
-  "Mon 10.00 - 22.00",
-  "Mon 10.00 - 22.00",
-  "Mon 10.00 - 22.00",
-  "Mon 10.00 - 22.00",
-];
-
-const _resImage = [
-  "https://www.siamfuture.com/images/content/projects/j_avenue/j_avenue-1.jpg",
-  "https://www.siamfuture.com/images/content/projects/j_avenue/j_avenue-4.jpg",
-  "https://img.wongnai.com/p/1920x0/2020/01/22/37270d2bda7447b58c70aa0b7ed7e87f.jpg",
-  "https://lh5.googleusercontent.com/p/AF1QipMKTlEAi7Qev0mDQb-CfTDyi6j_tmfEfErIROpp=w1080-k-no",
-  "https://api.soimilk.com/sites/default/files/u143208/j_avenue-21_2.jpg",
-];
-
-const _list = [
-  {
-    name: "Amy Farha",
-    avatar_url: "http://www.bradshawfoundation.com/bfnews/uploads/erectus2.jpg",
-    subtitle: "So many restaurants here. Great facilities.",
-    rating: 4,
-  },
-  {
-    name: "Chris Jackson",
-    avatar_url: "http://www.bradshawfoundation.com/bfnews/uploads/erectus2.jpg",
-    subtitle: "So many restaurants here. Great facilities.",
-    rating: 4,
-  },
-];
+import axios from "axios";
+import { Loading } from "../components/Loading";
 
 export default function LocationScreen({
   navigation,
   route,
 }: MainStackScreenProps<"Location">) {
-  const [modal, setModal] = React.useState(false);
-  const [rating, setRating] = React.useState<number>(0);
-  const [comment, setComment] = React.useState<string>();
-  const { userData, latlng } = React.useContext(AuthContext);
+  const [location, setLocation] = useState<LocationInfoType>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [modal, setModal] = useState(false);
+  const [rating, setRating] = useState<number>(0);
+  const [comment, setComment] = useState<string>();
+  const { userData, latlng } = useContext(AuthContext);
+
   const toogleModal = () => {
     setModal((prev) => !prev);
   };
 
-  const [currentLocation, setCurrentLocation] =
-    useState<Location.LocationObject | null>(null);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [location, setLocation] = useState<LocationInfoType>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const fetchRecommendedLocations = useCallback(async (loc: LatLngType) => {
+    try {
+      const url = Backend.backend_url || "http://localhost:4000";
+      const body = {
+        lat: loc.latitude,
+        lng: loc.longitude,
+        locationId: route.params.locationID,
+      };
 
-  const fetchRecommendedLocations = useCallback(
-    async (loc: Location.LocationObject) => {
-      try {
-        const url = Backend.backend_url || "http://localhost:4000";
-        const body = {
-          lat: loc.coords.latitude,
-          lng: loc.coords.longitude,
-          locationId: route.params.locationID,
-        };
-
-        const response = await fetch(url + `/data/location`, {
-          method: "POST",
-          body: JSON.stringify(body),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        const data: LocationInfoType = await response.json();
-        console.log(data);
-        setLocation(data);
-        setIsLoading(false);
-      } catch (error) {
-        console.log("error", error);
-      }
-    },
-    []
-  );
-
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
-
-      let currentLoc = await Location.getCurrentPositionAsync({});
-      fetchRecommendedLocations(currentLoc);
-      setCurrentLocation(currentLoc);
-    })();
+      const { data } = await axios.post<LocationInfoType>(
+        url + `/data/location`,
+        body
+      );
+      setLocation(data);
+    } catch (error) {
+      console.log("error", error);
+    }
   }, []);
 
-  const locationIsExisted = location != undefined;
-  const distance =
-    locationIsExisted && location.distance != null
-      ? +location.distance.toFixed(2)
-      : 0;
-  const openingDate = locationIsExisted
-    ? location.openTime.map((item) => item.day + " " + item.time)
-    : _openingDate;
-  const images = locationIsExisted ? location.images : _resImage;
-  const comments = locationIsExisted ? location.comments : [];
-  const restaurants = locationIsExisted ? location.restaurants : [];
-  const averageRating = locationIsExisted ? location.rating : 0;
-  const elevators = locationIsExisted ? location.elevators : [];
-  const parkings = locationIsExisted ? location.parkings : [];
-  const toilets = locationIsExisted ? location.toilets : [];
-  const ramps = locationIsExisted ? location.ramps : [];
-  const doors = locationIsExisted ? location.doors : [];
+  useEffect(() => {
+    fetchRecommendedLocations(latlng);
+    setIsLoading(false);
+  }, []);
 
   const submitComment = () => {
     console.log(rating);
     console.log(comment);
   };
-  console.log(latlng);
+
+  const locationIsExisted = location != undefined;
+  const openingDate =
+    location?.openTime.map((item) => item.day + " " + item.time) || [];
+
+  if (isLoading) {
+    return <Loading />;
+  }
   const Modal = () => {
     return (
       <Dialog isVisible={modal} overlayStyle={{ borderRadius: 16 }}>
@@ -222,29 +159,33 @@ export default function LocationScreen({
     <ScrollContainer>
       <Modal />
       <PlaceTitle
-        title={locationIsExisted ? location.locationName : "location"}
-        distance={distance}
+        title={location?.locationName || "Location"}
+        distance={
+          location?.distance != null ? +location?.distance.toFixed(2)! : 0
+        }
       />
       <LocationDetail
-        catagory={locationIsExisted ? location.category : "category"}
-        location={locationIsExisted ? location.located : "address"}
+        catagory={location?.category || "category"}
+        location={location?.located || "address"}
         openingDate={openingDate}
+        googleMap={location?.googelMap || "www.googlemap.com"}
+        contact={location?.contact || "0"}
       />
-      <PlaceImage images={images} />
+      <PlaceImage images={location?.images || []} />
       <Accessibility
-        rating={averageRating}
-        elevator={elevators.length != 0}
-        parking={parkings.length != 0}
-        toilet={toilets.length != 0}
-        wheelchair={ramps.length != 0}
-        door={doors.length != 0}
+        rating={location?.rating || 0}
+        elevator={location?.elevators.length != 0}
+        parking={location?.parkings.length != 0}
+        toilet={location?.toilets.length != 0}
+        wheelchair={location?.ramps.length != 0}
+        door={location?.doors.length != 0}
         navigateHandler={() => {
           navigation.navigate("Accessibility", {
-            elevators: elevators,
-            parkings: parkings,
-            toilets: toilets,
-            ramps: ramps,
-            doors: doors,
+            elevators: location?.elevators || [],
+            parkings: location?.parkings || [],
+            toilets: location?.toilets || [],
+            ramps: location?.ramps || [],
+            doors: location?.doors || [],
           });
         }}
       />
@@ -253,15 +194,9 @@ export default function LocationScreen({
           Restaurants
         </Text>
         <FlatList
-          data={restaurants}
+          data={location?.restaurants || []}
           keyExtractor={(item) => {
-            return (
-              item.toString() +
-              new Date().getTime().toString() +
-              Math.floor(
-                Math.random() * Math.floor(new Date().getTime())
-              ).toString()
-            );
+            return item.restaurantId.toString();
           }}
           renderItem={({ item }) => (
             <Image
@@ -271,7 +206,7 @@ export default function LocationScreen({
               onPress={() => {
                 if (locationIsExisted) {
                   navigation.navigate("Restaurant", {
-                    locationID: location?.locationId,
+                    locationID: location?.locationId!,
                     restaurantID: item.restaurantId,
                   });
                 }
@@ -294,7 +229,7 @@ export default function LocationScreen({
             buttonStyle={{ borderRadius: 12 }}
           />
         </View>
-        {comments.map((value, index) => (
+        {(location?.comments || []).map((value, index) => (
           <ListItem key={index}>
             <Avatar
               rounded
