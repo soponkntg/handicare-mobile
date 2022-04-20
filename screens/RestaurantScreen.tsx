@@ -22,7 +22,10 @@ export default function RestaurantScreen({
 }: MainStackScreenProps<"Restaurant">) {
   const [restaurant, setRestaurant] = useState<LocationRestaurantInfoType>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { latlng } = useContext(AuthContext);
+  const { latlng, userData } = useContext(AuthContext);
+
+  const [rating, setRating] = React.useState<number>(0);
+  const [comment, setComment] = React.useState<string>("");
 
   const fetchLocationRestuarantDeatail = useCallback(
     async (loc: LatLngType) => {
@@ -46,6 +49,28 @@ export default function RestaurantScreen({
     },
     []
   );
+
+  const submitComment = async () => {
+    try {
+      const url = Backend.backend_url || "http://localhost:4000";
+      const commentBody = {
+        userId: userData.data?.id,
+        locationId: restaurant?.locationId,
+        restaurantId: restaurant?.restaurantId,
+        message: comment,
+        rating: rating,
+      };
+
+      const response = await axios.post(
+        url + `/account/restaurant/comment`,
+        commentBody
+      );
+
+      console.log(response.data);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
   useEffect(() => {
     fetchLocationRestuarantDeatail(latlng);

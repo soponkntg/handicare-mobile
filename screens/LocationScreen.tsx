@@ -61,9 +61,23 @@ export default function LocationScreen({
     setIsLoading(false);
   }, []);
 
-  const submitComment = () => {
-    console.log(rating);
-    console.log(comment);
+  const submitComment = async () => {
+    try {
+      const url = Backend.backend_url || "http://localhost:4000";
+      const commentBody = {
+        userId: userData.data?.id,
+        locationId: location?.locationId,
+        message: comment,
+        rating: rating,
+      };
+      const response = await axios.post(
+        url + `/account/location/comment`,
+        commentBody
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   const locationIsExisted = location != undefined;
@@ -229,31 +243,46 @@ export default function LocationScreen({
             buttonStyle={{ borderRadius: 12 }}
           />
         </View>
-        {(location?.comments || []).map((value, index) => (
-          <ListItem key={index}>
-            <Avatar
-              rounded
-              title="PF"
-              source={{ uri: value.profileImageURL }}
-              imageProps={{ resizeMode: "contain" }}
+        <View>
+          <View style={styles.rowSapce}>
+            <Text style={{ fontSize: 16 }} bold>
+              Comments
+            </Text>
+            <Button
+              title="Add a comment"
+              type="outline"
+              containerStyle={{ width: 120, paddingHorizontal: 6 }}
+              titleStyle={{ fontSize: 12 }}
+              buttonStyle={{ borderRadius: 12 }}
+              onPress={toogleModal}
             />
-            <ListItem.Content>
-              <View style={styles.rowSapce}>
-                <Text style={{ fontSize: 12 }} bold>
-                  {value.userName}
-                </Text>
-                <AirbnbRating
-                  isDisabled={true}
-                  showRating={false}
-                  size={12}
-                  defaultRating={value.rating}
-                  selectedColor="#85A5FF"
-                />
-              </View>
-              <Text style={{ fontSize: 12 }}>{value.message}</Text>
-            </ListItem.Content>
-          </ListItem>
-        ))}
+          </View>
+          {(location?.comments || []).map((value, index) => (
+            <ListItem key={index}>
+              <Avatar
+                rounded
+                title="PF"
+                source={{ uri: value.profileImageURL }}
+                imageProps={{ resizeMode: "contain" }}
+              />
+              <ListItem.Content>
+                <View style={styles.rowSapce}>
+                  <Text style={{ fontSize: 12 }} bold>
+                    {value.userName}
+                  </Text>
+                  <AirbnbRating
+                    isDisabled={true}
+                    showRating={false}
+                    size={12}
+                    defaultRating={value.rating}
+                    selectedColor="#85A5FF"
+                  />
+                </View>
+                <Text style={{ fontSize: 12 }}>{value.message}</Text>
+              </ListItem.Content>
+            </ListItem>
+          ))}
+        </View>
       </View>
     </ScrollContainer>
   );

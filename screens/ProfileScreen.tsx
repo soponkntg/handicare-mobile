@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { View } from "react-native";
 import { Avatar, Button } from "react-native-elements";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
@@ -8,10 +8,14 @@ import { Container, Text } from "../components/Themed";
 import * as WebBrowser from "expo-web-browser";
 import { AuthContext } from "../context/authContext";
 import { Loading } from "../components/Loading";
+import Backend from "../constants/Backend";
+import axios from "axios";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function ProfileScreen() {
+  const [userCreated, setUserCreated] = useState(false)
   const { latlng, loginHandler, userData, logoutHandler } =
     useContext(AuthContext);
 
@@ -29,10 +33,32 @@ export default function ProfileScreen() {
     expoClientId: "1983457675169499",
   });
 
-  console.log('user data', userData)
-  console.log('google',googleRequest, googleResponse)
-  console.log('facebook', faceRequest, faceResponse)
+  const createUser = async () => {
+    if (userData.data && !userCreated) {
+      try {
+        // const url = Backend.backend_url || "http://localhost:4000";
+        const url = "http://localhost:4000";
+        const body = {
+          id: userData.data.id,
+          username: userData.data.name, 
+          profileImageURL: userData.data.picture,
+          email: userData.loginOption //temporary
+        }
+        console.log(body)
+  
+        const response = await axios.post(
+          url + `/account/user`,
+          body
+        );
+        console.log(response.data)
+        setUserCreated(true)
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
+  }
 
+  createUser();
 
   React.useEffect(() => {
     if (googleResponse?.type === "success" && googleResponse.authentication) {
@@ -73,7 +99,10 @@ export default function ProfileScreen() {
                 height: 50,
                 backgroundColor: "#db3236",
               }}
-              onPress={logoutHandler}
+              onPress={() => {
+                logoutHandler();
+                setUserCreated(false);
+              }}
             />
           </>
         ) : (
@@ -90,6 +119,7 @@ export default function ProfileScreen() {
               }}
               onPress={() => {
                 googlePromptAsync({ useProxy: true });
+
               }}
             />
             <Button
