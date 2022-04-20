@@ -63,7 +63,7 @@ export function LocationDetail({
           darkColor="white"
           onPress={onPressMobileNumberClick}
         >
-          0641744793
+          {`0${contact}`}
         </Text>
       </View>
       <View style={styles.row}>
