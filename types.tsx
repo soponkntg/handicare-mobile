@@ -43,6 +43,7 @@ export type MainStackParamList = {
     ramps: RampType[];
     doors: DoorType[];
   };
+  Comment: { locationID: number; restaurantID?: number };
   Modal: undefined;
 };
 

@@ -25,6 +25,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import LocationScreen from "../screens/LocationScreen";
 import RestaurantScreen from "../screens/RestaurantScreen";
 import AccessibilityScreen from "../screens/AccessibilityScreen";
+import CommentScreen from "../screens/CommentScreen";
 import { AuthContextProvider } from "../context/authContext";
 
 const MyTheme = {
@@ -142,6 +143,16 @@ function HomeStackNavigator() {
           headerTitle: "",
         }}
       ></HomeStack.Screen>
+      <HomeStack.Screen
+        name="Comment"
+        component={CommentScreen}
+        options={{
+          headerBackTitle: "",
+          headerTransparent: true,
+          headerBackButtonMenuEnabled: false,
+          headerTitle: "",
+        }}
+      />
       <HomeStack.Group screenOptions={{ presentation: "modal" }}>
         <HomeStack.Screen name="Modal" component={ModalScreen} />
       </HomeStack.Group>

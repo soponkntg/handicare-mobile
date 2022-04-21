@@ -1,6 +1,15 @@
-import React, { useContext } from "react";
+import React, { createRef, useContext, useMemo, useRef } from "react";
 import { useState, useCallback, useEffect } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  NativeSyntheticEvent,
+  StyleSheet,
+  TextInput,
+  TextInputChangeEventData,
+  TextInputComponent,
+  View,
+} from "react-native";
 import { ScrollContainer, Text } from "../components/Themed";
 import { LatLngType, LocationInfoType, MainStackScreenProps } from "../types";
 import { PlaceTitle } from "../components/PlaceTItile";
@@ -21,6 +30,11 @@ import { AuthContext } from "../context/authContext";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { Loading } from "../components/Loading";
+import { CurrentRenderContext } from "@react-navigation/native";
+
+interface AppRefs {
+  stepInput: HTMLInputElement;
+}
 
 export default function LocationScreen({
   navigation,
@@ -29,12 +43,14 @@ export default function LocationScreen({
   const [location, setLocation] = useState<LocationInfoType>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [modal, setModal] = useState(false);
-  const [rating, setRating] = useState<number>(0);
-  const [comment, setComment] = useState<string>();
   const { userData, latlng } = useContext(AuthContext);
 
-  const toogleModal = () => {
-    setModal((prev) => !prev);
+  const toggleModal = () => {
+    if (userData.token && userData.data && location) {
+      commentNavigationHandler(location.locationId);
+    } else {
+      setModal(true);
+    }
   };
 
   const fetchRecommendedLocations = useCallback(async (loc: LatLngType) => {
@@ -61,23 +77,8 @@ export default function LocationScreen({
     setIsLoading(false);
   }, []);
 
-  const submitComment = async () => {
-    try {
-      const url = Backend.backend_url || "http://localhost:4000";
-      const commentBody = {
-        userId: userData.data?.id,
-        locationId: location?.locationId,
-        message: comment,
-        rating: rating,
-      };
-      const response = await axios.post(
-        url + `/account/location/comment`,
-        commentBody
-      );
-      console.log(response.data);
-    } catch (error) {
-      console.log("error", error);
-    }
+  const commentNavigationHandler = (locationID: number) => {
+    navigation.navigate("Comment", { locationID });
   };
 
   const locationIsExisted = location != undefined;
@@ -90,81 +91,26 @@ export default function LocationScreen({
   const Modal = () => {
     return (
       <Dialog isVisible={modal} overlayStyle={{ borderRadius: 16 }}>
-        {userData.token && userData.data ? (
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{ fontSize: 20, textAlign: "center", marginBottom: 16 }}
+            bold
           >
-            <Ionicons
-              name="close"
-              size={20}
-              color="black"
-              style={{
-                alignSelf: "flex-start",
-                position: "absolute",
-                top: 0,
-                left: 4,
-              }}
-              onPress={toogleModal}
-            />
-            <Text style={{ fontSize: 16 }} bold>
-              Rate this place
-            </Text>
-            <AirbnbRating
-              showRating={false}
-              defaultRating={5}
-              size={26}
-              starContainerStyle={{ marginVertical: 16 }}
-              onFinishRating={(rating) => {
-                setRating(rating);
-              }}
-            />
-            <Input
-              placeholder="write a comment"
-              inputContainerStyle={{
-                borderRadius: 1,
-                borderColor: "#E0E0E0",
-                borderWidth: 1,
-                padding: 10,
-              }}
-              inputStyle={{ fontSize: 14 }}
-              multiline
-              onChangeText={(value) => {
-                setComment(value);
-              }}
-            />
-            <Button
-              title="Submit"
-              containerStyle={{ width: 120, paddingHorizontal: 6 }}
-              titleStyle={{ fontSize: 12 }}
-              buttonStyle={{ borderRadius: 12 }}
-              onPress={submitComment}
-            />
-          </View>
-        ) : (
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{ fontSize: 20, textAlign: "center", marginBottom: 16 }}
-              bold
-            >
-              Please login before comment
-            </Text>
-            <Button
-              title="Close"
-              containerStyle={{ width: 120, paddingHorizontal: 6 }}
-              titleStyle={{ fontSize: 12 }}
-              buttonStyle={{ borderRadius: 12 }}
-              onPress={toogleModal}
-            />
-          </View>
-        )}
+            Please login before comment
+          </Text>
+          <Button
+            title="Close"
+            containerStyle={{ width: 120, paddingHorizontal: 6 }}
+            titleStyle={{ fontSize: 12 }}
+            buttonStyle={{ borderRadius: 12 }}
+            onPress={() => setModal(false)}
+          />
+        </View>
       </Dialog>
     );
   };
@@ -231,18 +177,6 @@ export default function LocationScreen({
         />
       </View>
       <View>
-        <View style={styles.rowSapce}>
-          <Text style={{ fontSize: 16 }} bold>
-            Comments
-          </Text>
-          <Button
-            title="Add a comment"
-            type="outline"
-            containerStyle={{ width: 120, paddingHorizontal: 6 }}
-            titleStyle={{ fontSize: 12 }}
-            buttonStyle={{ borderRadius: 12 }}
-          />
-        </View>
         <View>
           <View style={styles.rowSapce}>
             <Text style={{ fontSize: 16 }} bold>
@@ -254,7 +188,7 @@ export default function LocationScreen({
               containerStyle={{ width: 120, paddingHorizontal: 6 }}
               titleStyle={{ fontSize: 12 }}
               buttonStyle={{ borderRadius: 12 }}
-              onPress={toogleModal}
+              onPress={toggleModal}
             />
           </View>
           {(location?.comments || []).map((value, index) => (
