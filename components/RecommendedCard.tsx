@@ -38,6 +38,7 @@ export default function RecommendedCard(
     parking,
     navigation,
   } = props;
+  console.log(name, distance);
   return (
     <TouchableOpacity
       style={styles.card}
@@ -55,7 +56,7 @@ export default function RecommendedCard(
         </Text>
         <View style={[styles.row, { marginBottom: 5 }]}>
           <Entypo name="location-pin" size={12} color="#2F54EB" />
-          <Text style={styles.location}>{`${distance} km away`}</Text>
+          <Text style={styles.location}>{`${distance?.toFixed(2)} km away`}</Text>
         </View>
         <View style={styles.row}>
           <ParkingIcon

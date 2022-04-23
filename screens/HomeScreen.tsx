@@ -59,7 +59,6 @@ export default function HomeScreen({
       const { data } = await axios.get<RestaurantType[]>(
         url + `/data/recommend/restaurant?lat=${lat}&lng=${lng}`
       );
-
       setRestaurants(data);
     } catch (error) {
       console.log("error", error);

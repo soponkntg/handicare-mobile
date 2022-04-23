@@ -10,7 +10,7 @@ import { PlaceTitle } from "../components/PlaceTItile";
 import { PlaceImage } from "../components/PlaceImage";
 import { Accessibility } from "../components/Accessibility";
 import { Loading } from "../components/Loading";
-import { AirbnbRating, Avatar, Button, ListItem } from "react-native-elements";
+import { AirbnbRating, Avatar, Button, Dialog, ListItem } from "react-native-elements";
 import { RestaurantDetail } from "../components/RestaurantDetail";
 import axios from "axios";
 import Backend from "../constants/Backend";
@@ -23,9 +23,7 @@ export default function RestaurantScreen({
   const [restaurant, setRestaurant] = useState<LocationRestaurantInfoType>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { latlng, userData } = useContext(AuthContext);
-
-  const [rating, setRating] = React.useState<number>(0);
-  const [comment, setComment] = React.useState<string>("");
+  const [modal, setModal] = useState(false);
 
   const fetchLocationRestuarantDeatail = useCallback(
     async (loc: LatLngType) => {
@@ -50,28 +48,6 @@ export default function RestaurantScreen({
     []
   );
 
-  const submitComment = async () => {
-    try {
-      const url = Backend.backend_url || "http://localhost:4000";
-      const commentBody = {
-        userId: userData.data?.id,
-        locationId: restaurant?.locationId,
-        restaurantId: restaurant?.restaurantId,
-        message: comment,
-        rating: rating,
-      };
-
-      const response = await axios.post(
-        url + `/account/restaurant/comment`,
-        commentBody
-      );
-
-      console.log(response.data);
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-
   useEffect(() => {
     fetchLocationRestuarantDeatail(latlng);
     setIsLoading(false);
@@ -81,11 +57,51 @@ export default function RestaurantScreen({
     return <Loading />;
   }
 
-  const openingDate =
-    restaurant?.openTime.map((item) => item.day + " " + item.time) || [];
+  const commentNavigationHandler = (locationID: number, restaurantID?: number) => {
+    navigation.navigate("Comment", { locationID, restaurantID });
+  };
+
+  const toggleModal = () => {
+    if (userData.token && userData.data && restaurant) {
+      commentNavigationHandler(restaurant.locationId, restaurant.restaurantId );
+    } else {
+      setModal(true);
+    }
+  };
+
+  const openingDate = restaurant?.openTime.map((item) => item.day + " " + item.time) || [];
+
+
+  const Modal = () => {
+      return (
+        <Dialog isVisible={modal} overlayStyle={{ borderRadius: 16 }}>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{ fontSize: 20, textAlign: "center", marginBottom: 16 }}
+              bold
+            >
+              Please login before comment
+            </Text>
+            <Button
+              title="Close"
+              containerStyle={{ width: 120, paddingHorizontal: 6 }}
+              titleStyle={{ fontSize: 12 }}
+              buttonStyle={{ borderRadius: 12 }}
+              onPress={() => setModal(false)}
+            />
+          </View>
+        </Dialog>
+      );
+  };
 
   return (
     <ScrollContainer>
+      <Modal/>
       <PlaceTitle
         title={restaurant?.restaurantName || "restaurant"}
         distance={
@@ -144,6 +160,7 @@ export default function RestaurantScreen({
             containerStyle={{ width: 120, paddingHorizontal: 6 }}
             titleStyle={{ fontSize: 12 }}
             buttonStyle={{ borderRadius: 12 }}
+            onPress={toggleModal}
           />
         </View>
         {(restaurant?.comments || []).map((value, index) => (
