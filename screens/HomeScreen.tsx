@@ -34,7 +34,6 @@ export default function HomeScreen({
       restaurantID,
     });
   };
-  console.log(latlng);
   const fetchRecommendedLocations = useCallback(async (loc: LatLngType) => {
     try {
       const url = Backend.backend_url || "http://localhost:4000";
