@@ -12,7 +12,9 @@ import {
   DoorType,
   ElevatorType,
   MainStackScreenProps,
+  ParkingType,
   RampType,
+  ToiletType,
 } from "../types";
 
 export default function AccessibilityScreen({
@@ -25,11 +27,11 @@ export default function AccessibilityScreen({
   const [rampExpanded, setRampExpanded] = React.useState(true);
   const [doorExpanded, setDoorExpanded] = React.useState(true);
 
-  const elevators = route.params.elevators;
-  const parkings = route.params.parkings;
-  const ramps = route.params.ramps;
-  const doors = route.params.doors;
-  const toilets = route.params.toilets;
+  const elevators: ElevatorType[] = route.params.elevators;
+  const parkings: ParkingType[] = route.params.parkings;
+  const ramps: RampType[] = route.params.ramps;
+  const doors: DoorType[] = route.params.doors;
+  const toilets: ToiletType[] = route.params.toilets;
 
   const displayText = (str: string) => {
     return str.length > 0 ? str : "-";
@@ -119,7 +121,7 @@ export default function AccessibilityScreen({
       {elevatorsList.length > 0 && (
         <View style={styles.cardMargin}>
           <Pressable
-            style={styles.header}
+            style={elevatorExpanded ? styles.header_expanded : styles.header}
             onPress={() => {
               setElevatorExpanded((prev) => !prev);
             }}
@@ -141,7 +143,7 @@ export default function AccessibilityScreen({
       {parkingsList.length > 0 && (
         <View style={styles.cardMargin}>
           <Pressable
-            style={styles.header}
+            style={parkingExpanded ? styles.header_expanded : styles.header}
             onPress={() => {
               setParkingExpanded((prev) => !prev);
             }}
@@ -163,7 +165,7 @@ export default function AccessibilityScreen({
       {toiletsList.length > 0 && (
         <View style={styles.cardMargin}>
           <Pressable
-            style={styles.header}
+            style={toiletExpanded ? styles.header_expanded : styles.header}
             onPress={() => {
               setToiletExpanded((prev) => !prev);
             }}
@@ -185,7 +187,7 @@ export default function AccessibilityScreen({
       {rampsList.length > 0 && (
         <View style={styles.cardMargin}>
           <Pressable
-            style={styles.header}
+            style={rampExpanded ? styles.header_expanded : styles.header}
             onPress={() => {
               setRampExpanded((prev) => !prev);
             }}
@@ -207,7 +209,7 @@ export default function AccessibilityScreen({
       {doorsList.length > 0 && (
         <View style={styles.cardMargin}>
           <Pressable
-            style={styles.header}
+            style={doorExpanded ? styles.header_expanded : styles.header}
             onPress={() => {
               setDoorExpanded((prev) => !prev);
             }}
@@ -235,13 +237,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 24,
   },
-  header: {
+  header_expanded: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: "#597EF7",
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
+    padding: 8,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#597EF7",
+    borderRadius: 8,
     padding: 8,
   },
   cardMargin: {
@@ -255,5 +265,6 @@ const styles = StyleSheet.create({
   },
   hide: {
     display: "none",
+    
   },
 });
