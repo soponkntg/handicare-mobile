@@ -16,7 +16,6 @@ import { ColorSchemeName } from "react-native";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
-import ModalScreen from "../screens/ModalScreen";
 import HomeScreen from "../screens/HomeScreen";
 import ExploreScreen from "../screens/ExploreScreen";
 import { MainStackParamList, RootTabParamList } from "../types";
@@ -26,7 +25,7 @@ import LocationScreen from "../screens/LocationScreen";
 import RestaurantScreen from "../screens/RestaurantScreen";
 import AccessibilityScreen from "../screens/AccessibilityScreen";
 import CommentScreen from "../screens/CommentScreen";
-import { AuthContextProvider } from "../context/authContext";
+import SearchScreen from "../screens/SearchScreen";
 
 const MyTheme = {
   ...DefaultTheme,
@@ -114,6 +113,16 @@ function HomeStackNavigator() {
         options={{ headerShown: false }}
       ></HomeStack.Screen>
       <HomeStack.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{
+          headerBackTitle: "",
+          headerTransparent: true,
+          headerBackButtonMenuEnabled: false,
+          headerTitle: "",
+        }}
+      ></HomeStack.Screen>
+      <HomeStack.Screen
         name="Location"
         component={LocationScreen}
         options={{
@@ -153,9 +162,6 @@ function HomeStackNavigator() {
           headerTitle: "",
         }}
       />
-      <HomeStack.Group screenOptions={{ presentation: "modal" }}>
-        <HomeStack.Screen name="Modal" component={ModalScreen} />
-      </HomeStack.Group>
     </HomeStack.Navigator>
   );
 }
@@ -199,9 +205,6 @@ function ExploreStackNavigator() {
           headerTitle: "",
         }}
       ></ExploreStack.Screen>
-      <ExploreStack.Group screenOptions={{ presentation: "modal" }}>
-        <ExploreStack.Screen name="Modal" component={ModalScreen} />
-      </ExploreStack.Group>
     </ExploreStack.Navigator>
   );
 }

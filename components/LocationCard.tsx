@@ -30,8 +30,8 @@ export default function LocationCard({
   parking,
   navigation,
 }: Props) {
-
-  let source: string = "https://cdn1.iconfinder.com/data/icons/modifiers-add-on-1-1/48/Sed-24-512.png";
+  let source: string =
+    "https://cdn1.iconfinder.com/data/icons/modifiers-add-on-1-1/48/Sed-24-512.png";
 
   if (placeImage != null) {
     source = placeImage;
@@ -54,7 +54,9 @@ export default function LocationCard({
         </Text>
         <View style={[styles.row, { marginBottom: 5 }]}>
           <Entypo name="location-pin" size={12} color="#2F54EB" />
-          <Text style={styles.location}>{`${distance?.toFixed(2)} km away`}</Text>
+          <Text style={styles.location}>{`${distance?.toFixed(
+            2
+          )} km away`}</Text>
         </View>
         <View style={[styles.row, { justifyContent: "flex-end" }]}>
           <ParkingIcon

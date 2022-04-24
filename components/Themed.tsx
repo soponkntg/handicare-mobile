@@ -65,6 +65,7 @@ export function ScrollContainer(props: ScrollContainerProps) {
   return (
     <ScrollView
       style={[{ backgroundColor, flex: 1, paddingHorizontal: 24 }, style]}
+      keyboardDismissMode="interactive"
       {...otherProps}
     >
       <SafeAreaView>{children}</SafeAreaView>

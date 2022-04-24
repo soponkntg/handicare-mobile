@@ -10,7 +10,13 @@ import { PlaceTitle } from "../components/PlaceTItile";
 import { PlaceImage } from "../components/PlaceImage";
 import { Accessibility } from "../components/Accessibility";
 import { Loading } from "../components/Loading";
-import { AirbnbRating, Avatar, Button, Dialog, ListItem } from "react-native-elements";
+import {
+  AirbnbRating,
+  Avatar,
+  Button,
+  Dialog,
+  ListItem,
+} from "react-native-elements";
 import { RestaurantDetail } from "../components/RestaurantDetail";
 import axios from "axios";
 import Backend from "../constants/Backend";
@@ -57,51 +63,54 @@ export default function RestaurantScreen({
     return <Loading />;
   }
 
-  const commentNavigationHandler = (locationID: number, restaurantID?: number) => {
+  const commentNavigationHandler = (
+    locationID: number,
+    restaurantID?: number
+  ) => {
     navigation.navigate("Comment", { locationID, restaurantID });
   };
 
   const toggleModal = () => {
     if (userData.token && userData.data && restaurant) {
-      commentNavigationHandler(restaurant.locationId, restaurant.restaurantId );
+      commentNavigationHandler(restaurant.locationId, restaurant.restaurantId);
     } else {
       setModal(true);
     }
   };
 
-  const openingDate = restaurant?.openTime.map((item) => item.day + " " + item.time) || [];
-
+  const openingDate =
+    restaurant?.openTime.map((item) => item.day + " " + item.time) || [];
 
   const Modal = () => {
-      return (
-        <Dialog isVisible={modal} overlayStyle={{ borderRadius: 16 }}>
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+    return (
+      <Dialog isVisible={modal} overlayStyle={{ borderRadius: 16 }}>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{ fontSize: 20, textAlign: "center", marginBottom: 16 }}
+            bold
           >
-            <Text
-              style={{ fontSize: 20, textAlign: "center", marginBottom: 16 }}
-              bold
-            >
-              Please login before comment
-            </Text>
-            <Button
-              title="Close"
-              containerStyle={{ width: 120, paddingHorizontal: 6 }}
-              titleStyle={{ fontSize: 12 }}
-              buttonStyle={{ borderRadius: 12 }}
-              onPress={() => setModal(false)}
-            />
-          </View>
-        </Dialog>
-      );
+            Please login before comment
+          </Text>
+          <Button
+            title="Close"
+            containerStyle={{ width: 120, paddingHorizontal: 6 }}
+            titleStyle={{ fontSize: 12 }}
+            buttonStyle={{ borderRadius: 12 }}
+            onPress={() => setModal(false)}
+          />
+        </View>
+      </Dialog>
+    );
   };
 
   return (
     <ScrollContainer>
-      <Modal/>
+      <Modal />
       <PlaceTitle
         title={restaurant?.restaurantName || "restaurant"}
         distance={

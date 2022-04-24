@@ -1,7 +1,6 @@
-import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import React, { useState, useContext, createRef, useEffect } from "react";
-import { BackHandler, StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 import { Button, Input } from "react-native-elements";
 import { AirbnbRating } from "react-native-ratings";
 import { Container, Text } from "../components/Themed";
@@ -17,8 +16,10 @@ export default function CommentScreen({
   const [comment, setComment] = useState<string>("");
   const { userData, latlng } = useContext(AuthContext);
   const commentRef = createRef<TextInput>();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!userData.token && !!userData.data);
-  console.log("isLoggedIn", !!userData.token, !!userData.data)
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
+    !!userData.token && !!userData.data
+  );
+  console.log("isLoggedIn", !!userData.token, !!userData.data);
 
   useEffect(() => {
     setIsLoggedIn(!!userData.token && !!userData.data);

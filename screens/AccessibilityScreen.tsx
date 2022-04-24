@@ -6,7 +6,7 @@ import { ElevatorDetail } from "../components/ElevatorDetail";
 import { ParkingDetail } from "../components/ParkingDetail";
 import { RampDetail } from "../components/RampDetail";
 
-import { Container, ScrollContainer, Text } from "../components/Themed";
+import { ScrollContainer, Text } from "../components/Themed";
 import { ToiletDetail } from "../components/ToiletDetail";
 import {
   DoorType,
@@ -265,6 +265,5 @@ const styles = StyleSheet.create({
   },
   hide: {
     display: "none",
-    
   },
 });

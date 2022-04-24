@@ -2,14 +2,12 @@ import {
   MaterialIcons,
   Ionicons,
   MaterialCommunityIcons,
-  Entypo,
   FontAwesome5,
 } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { DoorIcon } from "./DoorIcon";
 import { Text } from "./Themed";
-import { WheelchairIcon } from "./WheelchairIcon";
 
 interface Props {
   location: string;
