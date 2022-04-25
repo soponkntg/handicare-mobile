@@ -14,7 +14,7 @@ export default function CommentScreen({
 }: MainStackScreenProps<"Comment">) {
   const [rating, setRating] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
-  const { userData, latlng } = useContext(AuthContext);
+  const { userData } = useContext(AuthContext);
   const commentRef = createRef<TextInput>();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
     !!userData.token && !!userData.data

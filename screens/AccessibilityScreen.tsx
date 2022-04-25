@@ -18,7 +18,6 @@ import {
 } from "../types";
 
 export default function AccessibilityScreen({
-  navigation,
   route,
 }: MainStackScreenProps<"Accessibility">) {
   console.log(route.params);
@@ -47,7 +46,7 @@ export default function AccessibilityScreen({
 
   const displayTextAlt = (str: string) => {
     return str.length > 0 ? str : "-";
-  }
+  };
   const displaySwitch = (b: boolean) => {
     return b ? "Switch" : "No Usable Switch";
   };

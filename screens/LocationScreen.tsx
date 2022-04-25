@@ -14,7 +14,6 @@ import {
   Button,
   Dialog,
   Image,
-  Input,
   ListItem,
 } from "react-native-elements";
 import { AuthContext } from "../context/authContext";

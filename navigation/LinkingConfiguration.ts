@@ -20,7 +20,6 @@ const linking: LinkingOptions<RootTabParamList> = {
           Restaurant: "home/restaurant/:locationID/:restaurantID",
           Accessibility: "home/accessibility",
           Comment: "home/comment",
-          Modal: "home/modal",
         },
       },
       Explore: {
@@ -30,7 +29,6 @@ const linking: LinkingOptions<RootTabParamList> = {
           Restaurant: "explore/restaurant/:restaurantID",
           Accessibility: "explore/accessibility",
           Comment: "explore/comment",
-          Modal: "explore/modal",
         },
       },
       Profile: {
