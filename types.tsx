@@ -34,6 +34,7 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
 
 export type MainStackParamList = {
   Main: undefined;
+  Search: { search: string };
   Location: { locationID: number };
   Restaurant: { locationID: number; restaurantID?: number };
   Accessibility: {
@@ -44,7 +45,6 @@ export type MainStackParamList = {
     doors: DoorType[];
   };
   Comment: { locationID: number; restaurantID?: number };
-  Modal: undefined;
 };
 
 export type MainStackScreenProps<Screen extends keyof MainStackParamList> =
@@ -191,4 +191,12 @@ export interface UserDataType {
 export interface LatLngType {
   latitude?: number;
   longitude?: number;
+}
+
+export interface SearchResponse {
+  locationId: number;
+  locationName: string;
+  restaurantId: number;
+  restaurantName: string;
+  imageURL: string;
 }

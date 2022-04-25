@@ -4,7 +4,7 @@ import RecommendedCard from "../components/RecommendedCard";
 import { Loading } from "../components/Loading";
 import axios from "axios";
 
-import { Container, Text } from "../components/Themed";
+import { ScrollContainer, Text } from "../components/Themed";
 import Backend from "../constants/Backend";
 import {
   MainStackScreenProps,
@@ -13,6 +13,8 @@ import {
   LatLngType,
 } from "../types";
 import { AuthContext } from "../context/authContext";
+import { Input } from "react-native-elements";
+import { FontAwesome } from "@expo/vector-icons";
 
 export default function HomeScreen({
   navigation,
@@ -20,6 +22,7 @@ export default function HomeScreen({
   const [locations, setLocations] = useState<LocationType[]>([]);
   const [restaurants, setRestaurants] = useState<RestaurantType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [search, setSearch] = useState<string>();
   const { latlng } = useContext(AuthContext);
 
   const locationNavigationHandler = (locationID: number) => {
@@ -74,7 +77,29 @@ export default function HomeScreen({
     return <Loading />;
   }
   return (
-    <Container>
+    <ScrollContainer>
+      <Input
+        placeholder="Search"
+        leftIcon={<FontAwesome name="search" size={16} color="#597EF7" />}
+        inputContainerStyle={{
+          borderWidth: 1,
+          borderRadius: 24,
+          borderColor: "#595959",
+          paddingHorizontal: 12,
+        }}
+        inputStyle={{ fontSize: 12 }}
+        value={search}
+        onChangeText={(value) => {
+          setSearch(value);
+        }}
+        keyboardType="web-search"
+        autoCapitalize="none"
+        onSubmitEditing={() => {
+          if (search) {
+            navigation.navigate("Search", { search });
+          }
+        }}
+      />
       <View style={styles.section}>
         <Text style={styles.title} bold>
           Top 5 Search Locations
@@ -132,13 +157,13 @@ export default function HomeScreen({
           />
         </View>
       </View>
-    </Container>
+    </ScrollContainer>
   );
 }
 
 const styles = StyleSheet.create({
   section: {
-    marginBottom: 32,
+    marginBottom: 24,
   },
   title: {
     fontSize: 16,

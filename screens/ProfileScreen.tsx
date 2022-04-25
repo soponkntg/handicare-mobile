@@ -7,19 +7,14 @@ import * as Google from "expo-auth-session/providers/google";
 import { Container, Text } from "../components/Themed";
 import * as WebBrowser from "expo-web-browser";
 import { AuthContext } from "../context/authContext";
-import { Loading } from "../components/Loading";
-import Backend from "../constants/Backend";
 import axios from "axios";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function ProfileScreen() {
-  const [userCreated, setUserCreated] = useState(false)
+  const [userCreated, setUserCreated] = useState(false);
   const { latlng, loginHandler, userData, logoutHandler } =
     useContext(AuthContext);
-
-
 
   const [googleRequest, googleResponse, googlePromptAsync] =
     Google.useAuthRequest({
@@ -40,23 +35,20 @@ export default function ProfileScreen() {
         const url = "http://localhost:4000";
         const body = {
           id: userData.data.id,
-          username: userData.data.name, 
+          username: userData.data.name,
           profileImageURL: userData.data.picture,
-          email: userData.loginOption //temporary
-        }
-        console.log(body)
-  
-        const response = await axios.post(
-          url + `/account/user`,
-          body
-        );
-        console.log(response.data)
-        setUserCreated(true)
+          email: userData.loginOption, //temporary
+        };
+        console.log(body);
+
+        const response = await axios.post(url + `/account/user`, body);
+        console.log(response.data);
+        setUserCreated(true);
       } catch (error) {
         console.log("error", error);
       }
     }
-  }
+  };
 
   createUser();
 
@@ -119,7 +111,6 @@ export default function ProfileScreen() {
               }}
               onPress={() => {
                 googlePromptAsync({ useProxy: true });
-
               }}
             />
             <Button

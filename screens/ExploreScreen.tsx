@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     alignItems: "center",
+    paddingBottom: 150,
   },
   loading: {
     position: "absolute",

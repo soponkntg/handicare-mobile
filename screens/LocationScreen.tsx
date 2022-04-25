@@ -1,15 +1,6 @@
-import React, { createRef, useContext, useMemo, useRef } from "react";
+import React, { useContext } from "react";
 import { useState, useCallback, useEffect } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  NativeSyntheticEvent,
-  StyleSheet,
-  TextInput,
-  TextInputChangeEventData,
-  TextInputComponent,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { ScrollContainer, Text } from "../components/Themed";
 import { LatLngType, LocationInfoType, MainStackScreenProps } from "../types";
 import { PlaceTitle } from "../components/PlaceTItile";
@@ -27,14 +18,8 @@ import {
   ListItem,
 } from "react-native-elements";
 import { AuthContext } from "../context/authContext";
-import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { Loading } from "../components/Loading";
-import { CurrentRenderContext } from "@react-navigation/native";
-
-interface AppRefs {
-  stepInput: HTMLInputElement;
-}
 
 export default function LocationScreen({
   navigation,
@@ -149,33 +134,35 @@ export default function LocationScreen({
           });
         }}
       />
-      <View style={{ marginBottom: 32 }}>
-        <Text style={{ fontSize: 16 }} bold>
-          Restaurants
-        </Text>
-        <FlatList
-          data={location?.restaurants || []}
-          keyExtractor={(item) => {
-            return item.restaurantId.toString();
-          }}
-          renderItem={({ item }) => (
-            <Image
-              source={{ uri: item.logoURL }}
-              containerStyle={styles.picture}
-              PlaceholderContent={<ActivityIndicator />}
-              onPress={() => {
-                if (locationIsExisted) {
-                  navigation.navigate("Restaurant", {
-                    locationID: location?.locationId!,
-                    restaurantID: item.restaurantId,
-                  });
-                }
-              }}
-            />
-          )}
-          horizontal
-        />
-      </View>
+      {location?.restaurants.length != 0 && (
+        <View style={{ marginBottom: 32 }}>
+          <Text style={{ fontSize: 16 }} bold>
+            Restaurants
+          </Text>
+          <FlatList
+            data={location?.restaurants}
+            keyExtractor={(item) => {
+              return item.restaurantId.toString();
+            }}
+            renderItem={({ item }) => (
+              <Image
+                source={{ uri: item.logoURL }}
+                containerStyle={styles.picture}
+                PlaceholderContent={<ActivityIndicator />}
+                onPress={() => {
+                  if (locationIsExisted) {
+                    navigation.navigate("Restaurant", {
+                      locationID: location?.locationId!,
+                      restaurantID: item.restaurantId,
+                    });
+                  }
+                }}
+              />
+            )}
+            horizontal
+          />
+        </View>
+      )}
       <View>
         <View>
           <View style={styles.rowSapce}>
