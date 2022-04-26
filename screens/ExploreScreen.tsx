@@ -1,16 +1,48 @@
-import React from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import LocationCard from "../components/LocationCard";
 
 import { Container, Text } from "../components/Themed";
-import { MainStackScreenProps, TEMPRECOMLOCATION } from "../types";
+import Backend from "../constants/Backend";
+import { LatLngType, LocationType, MainStackScreenProps } from "../types";
+import { Loading } from "../components/Loading";
+import { AuthContext } from "../context/authContext";
+import axios from "axios";
 
 export default function ExploreScreen({
   navigation,
 }: MainStackScreenProps<"Main">) {
-  const locationNavigationHandler = (locationID: string) => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [locations, setLocations] = useState<LocationType[]>([]);
+  const { latlng } = useContext(AuthContext);
+
+  const locationNavigationHandler = (locationID: number) => {
     navigation.navigate("Location", { locationID });
   };
+
+  const fetchRecommendedLocations = useCallback(async (loc: LatLngType) => {
+    try {
+      const url = Backend.backend_url || "http://localhost:4000";
+      const lat = loc.latitude;
+      const lng = loc.longitude;
+
+      const { data } = await axios.get<LocationType[]>(
+        url + `/data/locations?lat=${lat}&lng=${lng}`
+      );
+      setLocations(data);
+    } catch (error) {
+      console.log("error", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchRecommendedLocations(latlng);
+    setIsLoading(false);
+  }, []);
+
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <Container>
       <Text style={styles.title} bold>
@@ -18,8 +50,8 @@ export default function ExploreScreen({
       </Text>
       <View style={styles.listContainer}>
         <FlatList
-          data={TEMPRECOMLOCATION}
-          keyExtractor={(item) => item.locationID}
+          data={locations}
+          keyExtractor={(item) => item.locationID.toString()}
           renderItem={({ item }) => (
             <LocationCard
               {...item}
@@ -41,5 +73,11 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     alignItems: "center",
+    paddingBottom: 150,
+  },
+  loading: {
+    position: "absolute",
+    left: "50%",
+    marginTop: "100%",
   },
 });

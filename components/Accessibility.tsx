@@ -1,4 +1,3 @@
-import { MaterialIcons, Entypo } from "@expo/vector-icons";
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { AirbnbRating } from "react-native-elements";

@@ -5,31 +5,38 @@ import {
   FontAwesome5,
   MaterialCommunityIcons,
   Ionicons,
+  Entypo,
 } from "@expo/vector-icons";
-import openMap from "react-native-open-maps";
+import * as WebLinking from "expo-linking";
 
 interface Props {
   catagory: string;
   location: string;
+  zone: string;
+  contact: string;
   openingDate: string[];
-  floor: string;
+  entrance: string;
   door: string;
+  googleMap: string;
 }
 
 export function RestaurantDetail({
   catagory,
   location,
+  zone,
+  contact,
   openingDate,
-  floor,
+  entrance,
   door,
+  googleMap,
 }: Props) {
   const [expanded, setExpanded] = React.useState(false);
   const [head, ...tail] = openingDate;
   const openGoogleMap = () => {
-    openMap({ latitude: 37.865101, longitude: -119.53833, provider: "google" });
+    WebLinking.openURL(googleMap);
   };
   const onPressMobileNumberClick = () => {
-    const number = "0641744793";
+    const number = "0" + contact;
     let phoneNumber = "";
     if (Platform.OS === "android") {
       phoneNumber = `tel:${number}`;
@@ -60,6 +67,12 @@ export function RestaurantDetail({
         </Text>
       </View>
       <View style={styles.row}>
+        <Entypo name="location" size={20} color="#2F54EB" />
+        <Text style={styles.iconMargin} lightColor="#595959" darkColor="white">
+          {zone}
+        </Text>
+      </View>
+      <View style={styles.row}>
         <MaterialCommunityIcons name="phone" size={20} color="#2F54EB" />
         <Text
           style={[styles.iconMargin, styles.locationText]}
@@ -67,7 +80,7 @@ export function RestaurantDetail({
           darkColor="white"
           onPress={onPressMobileNumberClick}
         >
-          0641744793
+          {`0${contact}`}
         </Text>
       </View>
       <View style={styles.row}>
@@ -111,7 +124,7 @@ export function RestaurantDetail({
       <View style={styles.row}>
         <MaterialCommunityIcons name="floor-plan" size={20} color="#2F54EB" />
         <Text style={styles.iconMargin} lightColor="#595959" darkColor="white">
-          {floor}
+          {entrance}
         </Text>
       </View>
       <View style={styles.row}>

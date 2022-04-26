@@ -2,22 +2,30 @@ import React from "react";
 import { Linking, Platform, Pressable, StyleSheet, View } from "react-native";
 import { Text } from "./Themed";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import openMap from "react-native-open-maps";
+import * as WebLinking from "expo-linking";
 
 interface Props {
   catagory: string;
   location: string;
   openingDate: string[];
+  contact: string;
+  googleMap: string;
 }
 
-export function LocationDetail({ catagory, location, openingDate }: Props) {
+export function LocationDetail({
+  catagory,
+  location,
+  openingDate,
+  contact,
+  googleMap,
+}: Props) {
   const [expanded, setExpanded] = React.useState(false);
   const [head, ...tail] = openingDate;
   const openGoogleMap = () => {
-    openMap({ latitude: 37.865101, longitude: -119.53833, provider: "google" });
+    WebLinking.openURL(googleMap);
   };
   const onPressMobileNumberClick = () => {
-    const number = "0641744793";
+    const number = "0" + contact;
     let phoneNumber = "";
     if (Platform.OS === "android") {
       phoneNumber = `tel:${number}`;
@@ -55,7 +63,7 @@ export function LocationDetail({ catagory, location, openingDate }: Props) {
           darkColor="white"
           onPress={onPressMobileNumberClick}
         >
-          0641744793
+          {`0${contact}`}
         </Text>
       </View>
       <View style={styles.row}>

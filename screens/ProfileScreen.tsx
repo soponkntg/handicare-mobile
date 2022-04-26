@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { View } from "react-native";
 import { Avatar, Button } from "react-native-elements";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
@@ -7,15 +7,16 @@ import * as Google from "expo-auth-session/providers/google";
 import { Container, Text } from "../components/Themed";
 import * as WebBrowser from "expo-web-browser";
 import { AuthContext } from "../context/authContext";
-import { Loading } from "../components/Loading";
+import axios from "axios";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function ProfileScreen() {
-  const { latlng, loginHandler, userData, logoutHandler } =
+  const [userCreated, setUserCreated] = useState(false);
+  const { latlng: _latlng, loginHandler, userData, logoutHandler } =
     useContext(AuthContext);
 
-  const [googleRequest, gooeleResponse, googlePromptAsync] =
+  const [_googleRequest, googleResponse, googlePromptAsync] =
     Google.useAuthRequest({
       expoClientId:
         "68092276774-pd425gfokt9lbl3ngadk7lf6rjd8v6n3.apps.googleusercontent.com",
@@ -23,15 +24,37 @@ export default function ProfileScreen() {
         "68092276774-n59nfv48rp3i1lv4sh0ts4oru4bat0nd.apps.googleusercontent.com",
     });
 
-  const [faceRequest, faceResponse, facePromptAsync] = Facebook.useAuthRequest({
+  const [_faceRequest, faceResponse, facePromptAsync] = Facebook.useAuthRequest({
     expoClientId: "1983457675169499",
   });
 
-  React.useEffect(() => {
-    if (gooeleResponse?.type === "success" && gooeleResponse.authentication) {
-      loginHandler(gooeleResponse.authentication.accessToken, "google");
+  const createUser = async () => {
+    if (userData.data && !userCreated) {
+      try {
+        // const url = Backend.backend_url || "http://localhost:4000";
+        const url = "http://localhost:4000";
+        const body = {
+          id: userData.data.id,
+          username: userData.data.name,
+          profileImageURL: userData.data.picture,
+          email: userData.loginOption, 
+        };
+
+        await axios.post(url + `/account/user`, body);
+        setUserCreated(true);
+      } catch (error) {
+        console.log("error", error);
+      }
     }
-  }, [gooeleResponse]);
+  };
+
+  createUser();
+
+  React.useEffect(() => {
+    if (googleResponse?.type === "success" && googleResponse.authentication) {
+      loginHandler(googleResponse.authentication.accessToken, "google");
+    }
+  }, [googleResponse]);
 
   React.useEffect(() => {
     if (faceResponse?.type === "success" && faceResponse.authentication) {
@@ -66,7 +89,10 @@ export default function ProfileScreen() {
                 height: 50,
                 backgroundColor: "#db3236",
               }}
-              onPress={logoutHandler}
+              onPress={() => {
+                logoutHandler();
+                setUserCreated(false);
+              }}
             />
           </>
         ) : (

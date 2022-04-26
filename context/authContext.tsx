@@ -6,7 +6,6 @@ import {
   LatLngType,
   UserDataType,
 } from "../types";
-import * as Location from "expo-location";
 
 interface ContextType {
   userData: UserDataType;
@@ -16,6 +15,7 @@ interface ContextType {
     loginOption: "facebook" | "google"
   ) => void;
   logoutHandler: () => void;
+  latlngHandler: (lat: number, lng: number) => void;
 }
 
 export const AuthContext = React.createContext<ContextType>({
@@ -23,6 +23,7 @@ export const AuthContext = React.createContext<ContextType>({
   latlng: { latitude: undefined, longitude: undefined },
   loginHandler: (tokenString: string, loginOption: "facebook" | "google") => {},
   logoutHandler: () => {},
+  latlngHandler: (lat: number, lng: number) => {},
 });
 
 export const AuthContextProvider = (props: {
@@ -52,7 +53,7 @@ export const AuthContextProvider = (props: {
         loginOption: "google",
       });
     } catch (e) {
-      console.log(e.message);
+      console.log(e);
     }
   };
 
@@ -67,22 +68,11 @@ export const AuthContextProvider = (props: {
         loginOption: "facebook",
       });
     } catch (e) {
-      console.log(e.message);
+      console.log(e);
     }
   };
 
   useEffect(() => {
-    // Locations
-    const getLogation = async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        return;
-      }
-      const { coords } = await Location.getCurrentPositionAsync({});
-      const { latitude, longitude } = coords;
-      setLatLng({ latitude, longitude });
-    };
-
     if (userData.token) {
       switch (userData.loginOption) {
         case "google":
@@ -91,7 +81,6 @@ export const AuthContextProvider = (props: {
           fetchFacebookData(userData.token);
       }
     }
-    getLogation();
   }, []);
 
   const loginHandler = (token: string, loginOption: "facebook" | "google") => {
@@ -111,9 +100,13 @@ export const AuthContextProvider = (props: {
     });
   };
 
+  const latlngHandler = (lat: number, lng: number) => {
+    setLatLng({ latitude: lat, longitude: lng });
+  };
+
   return (
     <AuthContext.Provider
-      value={{ loginHandler, userData, logoutHandler, latlng }}
+      value={{ loginHandler, userData, logoutHandler, latlng, latlngHandler }}
     >
       {props.children}
     </AuthContext.Provider>
