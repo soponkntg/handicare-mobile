@@ -19,14 +19,12 @@ export default function CommentScreen({
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
     !!userData.token && !!userData.data
   );
-  console.log("isLoggedIn", !!userData.token, !!userData.data);
 
   useEffect(() => {
     setIsLoggedIn(!!userData.token && !!userData.data);
   }, []);
 
   const submitComment = async () => {
-    console.log("value", comment);
     try {
       const url = Backend.backend_url || "http://localhost:4000";
       if (route.params.restaurantID) {
@@ -37,11 +35,10 @@ export default function CommentScreen({
           message: comment,
           rating: rating,
         };
-        const restaurantResponse = await axios.post(
+        await axios.post(
           url + `/account/restaurant/comment`,
           commentRestaurantBody
         );
-        console.log(restaurantResponse.data);
       } else {
         const commentLocationBody = {
           userId: userData.data?.id,
@@ -49,11 +46,10 @@ export default function CommentScreen({
           message: comment,
           rating: rating,
         };
-        const locationResponse = await axios.post(
+        await axios.post(
           url + `/account/location/comment`,
           commentLocationBody
         );
-        console.log(locationResponse.data);
       }
       commentRef.current?.clear();
       navigation.goBack();
@@ -96,7 +92,6 @@ export default function CommentScreen({
             multiline
             defaultValue={comment}
             onChangeText={(value) => {
-              console.log(value);
               setComment(value);
             }}
           />

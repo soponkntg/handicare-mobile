@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import { useState, useCallback, useEffect } from "react";
+import React, { useContext, useState, useCallback, useEffect } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { ScrollContainer, Text } from "../components/Themed";
 import { LatLngType, LocationInfoType, MainStackScreenProps } from "../types";
@@ -151,7 +150,7 @@ export default function LocationScreen({
                 onPress={() => {
                   if (locationIsExisted) {
                     navigation.navigate("Restaurant", {
-                      locationID: location?.locationId!,
+                      locationID: location?.locationId,
                       restaurantID: item.restaurantId,
                     });
                   }

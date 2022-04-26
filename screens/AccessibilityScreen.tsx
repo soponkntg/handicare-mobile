@@ -20,7 +20,6 @@ import {
 export default function AccessibilityScreen({
   route,
 }: MainStackScreenProps<"Accessibility">) {
-  console.log(route.params);
 
   const [elevatorExpanded, setElevatorExpanded] = React.useState(true);
   const [parkingExpanded, setParkingExpanded] = React.useState(true);

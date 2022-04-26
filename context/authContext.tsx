@@ -23,9 +23,7 @@ export const AuthContext = React.createContext<ContextType>({
   latlng: { latitude: undefined, longitude: undefined },
   loginHandler: (tokenString: string, loginOption: "facebook" | "google") => {},
   logoutHandler: () => {},
-  latlngHandler: (lat: number, lng: number) => {
-    console.log("default func latlng");
-  },
+  latlngHandler: (lat: number, lng: number) => {},
 });
 
 export const AuthContextProvider = (props: {

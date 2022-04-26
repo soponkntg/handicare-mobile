@@ -13,10 +13,10 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function ProfileScreen() {
   const [userCreated, setUserCreated] = useState(false);
-  const { latlng, loginHandler, userData, logoutHandler } =
+  const { latlng: _latlng, loginHandler, userData, logoutHandler } =
     useContext(AuthContext);
 
-  const [googleRequest, googleResponse, googlePromptAsync] =
+  const [_googleRequest, googleResponse, googlePromptAsync] =
     Google.useAuthRequest({
       expoClientId:
         "68092276774-pd425gfokt9lbl3ngadk7lf6rjd8v6n3.apps.googleusercontent.com",
@@ -24,7 +24,7 @@ export default function ProfileScreen() {
         "68092276774-n59nfv48rp3i1lv4sh0ts4oru4bat0nd.apps.googleusercontent.com",
     });
 
-  const [faceRequest, faceResponse, facePromptAsync] = Facebook.useAuthRequest({
+  const [_faceRequest, faceResponse, facePromptAsync] = Facebook.useAuthRequest({
     expoClientId: "1983457675169499",
   });
 
@@ -37,12 +37,10 @@ export default function ProfileScreen() {
           id: userData.data.id,
           username: userData.data.name,
           profileImageURL: userData.data.picture,
-          email: userData.loginOption, //temporary
+          email: userData.loginOption, 
         };
-        console.log(body);
 
-        const response = await axios.post(url + `/account/user`, body);
-        console.log(response.data);
+        await axios.post(url + `/account/user`, body);
         setUserCreated(true);
       } catch (error) {
         console.log("error", error);

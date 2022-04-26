@@ -50,7 +50,6 @@ export default function SearchScreen({
   useEffect(() => {
     searchPlaces();
   }, []);
-  console.log(searchResult);
 
   if (loading) {
     return <Loading />;
