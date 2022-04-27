@@ -39,7 +39,7 @@ export function ParkingDetail({ location, floor, door, car, remark }: Props) {
               color="#597EF7"
             />
             <Text style={styles.text} lightColor="#595959" darkColor="white">
-              {floor}
+              Floor: {floor}
             </Text>
           </View>
         )}

@@ -45,7 +45,7 @@ export function DoorDetail({
               color="#597EF7"
             />
             <Text style={styles.text} lightColor="#595959" darkColor="white">
-              {floor}
+              Floor: {floor}
             </Text>
           </View>
         )}
