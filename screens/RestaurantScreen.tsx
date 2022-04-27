@@ -133,7 +133,11 @@ export default function RestaurantScreen({
       <RestaurantDetail
         catagory={restaurant?.category || "category"}
         location={restaurant?.located || "Location"}
-        zone={`${restaurant?.floor}, ${restaurant?.restaurantLocated}`}
+        zone={`Floor: ${restaurant?.floor}${
+          restaurant?.restaurantLocated === ""
+            ? ""
+            : `, Zone: ${restaurant?.restaurantLocated}`
+        }`}
         openingDate={openingDate}
         contact={restaurant?.contact || "contact"}
         entrance={restaurant?.entrance || "floor"}
