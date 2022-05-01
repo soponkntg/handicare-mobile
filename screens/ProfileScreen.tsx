@@ -20,6 +20,7 @@ export default function ProfileScreen() {
     loginHandler,
     userData,
     logoutHandler,
+    createAppleUser,
   } = useContext(AuthContext);
 
   const [_googleRequest, googleResponse, googlePromptAsync] =
@@ -30,43 +31,21 @@ export default function ProfileScreen() {
         "68092276774-n59nfv48rp3i1lv4sh0ts4oru4bat0nd.apps.googleusercontent.com",
     });
 
-  // const [_faceRequest, faceResponse, facePromptAsync] = Facebook.useAuthRequest(
-  //   {
-  //     expoClientId: "1983457675169499",
-  //   }
-  // );
-
-  const createUser = async () => {
-    if (userData.data && !userCreated) {
-      try {
-        // const url = Backend.backend_url || "http://localhost:4000";
-        const url = "http://localhost:4000";
-        const body = {
-          id: userData.data.id,
-          username: userData.data.name,
-          profileImageURL: userData.data.picture,
-          email: userData.loginOption,
-        };
-
-        await axios.post(url + `/account/user`, body);
-        setUserCreated(true);
-      } catch (error) {
-        console.log("error", error);
-      }
-    }
-  };
-
   const openReport = () => {
     Linking.openURL("https://forms.gle/MaS1PUAtMY83jFVX8");
   };
-
-  createUser();
 
   React.useEffect(() => {
     if (googleResponse?.type === "success" && googleResponse.authentication) {
       loginHandler(googleResponse.authentication.accessToken, "google");
     }
   }, [googleResponse]);
+
+  // const [_faceRequest, faceResponse, facePromptAsync] = Facebook.useAuthRequest(
+  //   {
+  //     expoClientId: "1983457675169499",
+  //   }
+  // );
 
   // React.useEffect(() => {
   //   if (faceResponse?.type === "success" && faceResponse.authentication) {
@@ -154,6 +133,16 @@ export default function ProfileScreen() {
                       AppleAuthentication.AppleAuthenticationScope.EMAIL,
                     ],
                   });
+                  const detailsArePopulated: boolean =
+                    credential.email !== null;
+                  if (detailsArePopulated) {
+                    const username =
+                      credential.fullName?.givenName! +
+                      credential.fullName?.familyName!;
+                    createAppleUser(credential.user, username);
+                  } else {
+                    loginHandler(credential.user, "apple");
+                  }
                   console.log(credential);
                   // signed in
                 } catch (e) {

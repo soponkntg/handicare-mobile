@@ -185,7 +185,7 @@ export interface UserDataType {
     name: string;
     picture?: string;
   };
-  loginOption?: "facebook" | "google";
+  loginOption?: "facebook" | "google" | "apple";
 }
 
 export interface LatLngType {
@@ -199,4 +199,9 @@ export interface SearchResponse {
   restaurantId: number;
   restaurantName: string;
   imageURL: string;
+}
+
+export interface CreateUserResponse {
+  username: string;
+  profileImageURL?: string;
 }
