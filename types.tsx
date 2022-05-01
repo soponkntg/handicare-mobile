@@ -183,7 +183,7 @@ export interface UserDataType {
   data?: {
     id: string;
     name: string;
-    picture?: string;
+    picture: string | null;
   };
   loginOption?: "facebook" | "google" | "apple";
 }
@@ -203,5 +203,5 @@ export interface SearchResponse {
 
 export interface CreateUserResponse {
   username: string;
-  profileImageURL?: string;
+  profileImageURL: string | null;
 }

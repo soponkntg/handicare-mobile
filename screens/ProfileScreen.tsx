@@ -62,7 +62,12 @@ export default function ProfileScreen() {
               size={120}
               rounded
               title="A"
-              source={{ uri: userData.data.picture }}
+              source={{
+                uri:
+                  userData.data.picture === null
+                    ? undefined
+                    : userData.data.picture,
+              }}
               imageProps={{ resizeMode: "contain" }}
               containerStyle={{ backgroundColor: "purple" }}
             />
