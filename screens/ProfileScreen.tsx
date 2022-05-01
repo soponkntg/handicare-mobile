@@ -30,11 +30,11 @@ export default function ProfileScreen() {
         "68092276774-n59nfv48rp3i1lv4sh0ts4oru4bat0nd.apps.googleusercontent.com",
     });
 
-  const [_faceRequest, faceResponse, facePromptAsync] = Facebook.useAuthRequest(
-    {
-      expoClientId: "1983457675169499",
-    }
-  );
+  // const [_faceRequest, faceResponse, facePromptAsync] = Facebook.useAuthRequest(
+  //   {
+  //     expoClientId: "1983457675169499",
+  //   }
+  // );
 
   const createUser = async () => {
     if (userData.data && !userCreated) {
@@ -68,11 +68,11 @@ export default function ProfileScreen() {
     }
   }, [googleResponse]);
 
-  React.useEffect(() => {
-    if (faceResponse?.type === "success" && faceResponse.authentication) {
-      loginHandler(faceResponse.authentication.accessToken, "facebook");
-    }
-  }, [faceResponse]);
+  // React.useEffect(() => {
+  //   if (faceResponse?.type === "success" && faceResponse.authentication) {
+  //     loginHandler(faceResponse.authentication.accessToken, "facebook");
+  //   }
+  // }, [faceResponse]);
 
   return (
     <Container>
@@ -137,7 +137,7 @@ export default function ProfileScreen() {
                 facePromptAsync({ useProxy: true });
               }}
             /> */}
-            {/* <AppleAuthentication.AppleAuthenticationButton
+            <AppleAuthentication.AppleAuthenticationButton
               buttonType={
                 AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN
               }
@@ -160,7 +160,7 @@ export default function ProfileScreen() {
                   console.log(e);
                 }
               }}
-            /> */}
+            />
           </>
         )}
         <View

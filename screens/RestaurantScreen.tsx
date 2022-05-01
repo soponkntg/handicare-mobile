@@ -91,7 +91,12 @@ export default function RestaurantScreen({
           }}
         >
           <Text
-            style={{ fontSize: 20, textAlign: "center", marginBottom: 16 }}
+            style={{
+              fontSize: 20,
+              textAlign: "center",
+              marginBottom: 16,
+              color: "black",
+            }}
             bold
           >
             Please login before comment

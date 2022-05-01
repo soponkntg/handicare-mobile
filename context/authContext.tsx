@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import Backend from "../constants/Backend";
 import {
   FacebookUserResponse,
   GoogleUserResponse,
@@ -73,13 +74,31 @@ export const AuthContextProvider = (props: {
     }
   };
 
+  const createUser = async (userData: UserDataType) => {
+    try {
+      const url = Backend.backend_url || "http://localhost:4000";
+      const body = {
+        id: userData.data.id,
+        username: userData.data.name,
+        profileImageURL: userData.data.picture,
+        email: userData.loginOption,
+      };
+
+      await axios.post(url + `/account/user`, body);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   useEffect(() => {
     if (userData.token) {
       switch (userData.loginOption) {
         case "google":
           fetchGoogleData(userData.token);
+          break;
         case "facebook":
           fetchFacebookData(userData.token);
+          break;
       }
     }
   }, []);
@@ -89,8 +108,10 @@ export const AuthContextProvider = (props: {
     switch (loginOption) {
       case "google":
         fetchGoogleData(token);
+        break;
       case "facebook":
         fetchFacebookData(token);
+        break;
     }
   };
 

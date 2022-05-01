@@ -183,7 +183,7 @@ export interface UserDataType {
   data?: {
     id: string;
     name: string;
-    picture: string;
+    picture?: string;
   };
   loginOption?: "facebook" | "google";
 }

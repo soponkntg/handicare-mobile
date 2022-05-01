@@ -35,9 +35,7 @@ export function RampDetail({
         </Text>
         <View style={styles.textWithIcon}>
           <Ionicons name="location-sharp" size={20} color="#597EF7" />
-          <Text style={styles.text} lightColor="#595959" darkColor="white">
-            {location}
-          </Text>
+          <Text style={styles.text}>{location}</Text>
         </View>
         {floor && (
           <View style={styles.textWithIcon}>
@@ -46,9 +44,7 @@ export function RampDetail({
               size={20}
               color="#597EF7"
             />
-            <Text style={styles.text} lightColor="#595959" darkColor="white">
-              Floor: {floor}
-            </Text>
+            <Text style={styles.text}>Floor: {floor}</Text>
           </View>
         )}
         {slope && (
@@ -58,33 +54,25 @@ export function RampDetail({
               size={20}
               color="#597EF7"
             />
-            <Text style={styles.text} lightColor="#595959" darkColor="white">
-              {slope}
-            </Text>
+            <Text style={styles.text}>{slope}</Text>
           </View>
         )}
         {level && (
           <View style={styles.textWithIcon}>
             <Entypo name="bar-graph" size={20} color="#597EF7" />
-            <Text style={styles.text} lightColor="#595959" darkColor="white">
-              Turn: {level}
-            </Text>
+            <Text style={styles.text}>Turn: {level}</Text>
           </View>
         )}
         {handrail && (
           <View style={styles.textWithIcon}>
             <MaterialCommunityIcons name="stairs" size={20} color="#597EF7" />
-            <Text style={styles.text} lightColor="#595959" darkColor="white">
-              {handrail}
-            </Text>
+            <Text style={styles.text}>{handrail}</Text>
           </View>
         )}
         {remark && (
           <View style={styles.textWithIcon}>
             <MaterialIcons name="comment" size={20} color="#597EF7" />
-            <Text style={styles.text} lightColor="#595959" darkColor="white">
-              {remark}
-            </Text>
+            <Text style={styles.text}>{remark}</Text>
           </View>
         )}
       </View>
@@ -102,6 +90,7 @@ const styles = StyleSheet.create({
   },
   titleMargin: {
     marginBottom: 10,
+    color: "black",
   },
   textWithIcon: {
     flexDirection: "row",
@@ -112,5 +101,6 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontSize: 12,
     width: "80%",
+    color: "#595959",
   },
 });
