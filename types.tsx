@@ -70,7 +70,7 @@ export interface LocationInfoType {
   doors: DoorType[];
   elevators: ElevatorType[];
   images: string[];
-  googelMap: string;
+  googleMap: string;
   located: string;
   locationId: number;
   locationName: string;

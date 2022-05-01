@@ -67,7 +67,7 @@ export function RampDetail({
           <View style={styles.textWithIcon}>
             <Entypo name="bar-graph" size={20} color="#597EF7" />
             <Text style={styles.text} lightColor="#595959" darkColor="white">
-              {level}
+              Turn: {level}
             </Text>
           </View>
         )}

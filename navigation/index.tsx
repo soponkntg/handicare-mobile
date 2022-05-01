@@ -71,7 +71,9 @@ function BottomTabNavigator() {
         component={ExploreStackNavigator}
         options={{
           title: "Explore",
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="compass" color={color} />
+          ),
           headerShown: false,
         }}
       />
@@ -80,9 +82,7 @@ function BottomTabNavigator() {
         component={HomeStackNavigator}
         options={{
           title: "Home",
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="compass" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
           headerShown: false,
         }}
       />

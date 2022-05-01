@@ -142,7 +142,7 @@ export default function RestaurantScreen({
         contact={restaurant?.contact || "contact"}
         entrance={restaurant?.entrance || "floor"}
         door={restaurant?.doorType || "door type"}
-        googleMap={restaurant?.googelMap || "www.googlemap.com"}
+        googleMap={restaurant?.googleMap || "www.googlemap.com"}
       />
       <PlaceImage images={restaurant?.images || []} />
       <Accessibility

@@ -47,6 +47,7 @@ export const AuthContextProvider = (props: {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      console.log(data);
       setUserData({
         token,
         data: { id: data.id, name: data.name, picture: data.picture },
@@ -84,6 +85,7 @@ export const AuthContextProvider = (props: {
   }, []);
 
   const loginHandler = (token: string, loginOption: "facebook" | "google") => {
+    console.log(token);
     switch (loginOption) {
       case "google":
         fetchGoogleData(token);

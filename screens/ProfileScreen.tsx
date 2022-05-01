@@ -8,13 +8,19 @@ import { Container, Text } from "../components/Themed";
 import * as WebBrowser from "expo-web-browser";
 import { AuthContext } from "../context/authContext";
 import axios from "axios";
+import * as Linking from "expo-linking";
+import * as AppleAuthentication from "expo-apple-authentication";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function ProfileScreen() {
   const [userCreated, setUserCreated] = useState(false);
-  const { latlng: _latlng, loginHandler, userData, logoutHandler } =
-    useContext(AuthContext);
+  const {
+    latlng: _latlng,
+    loginHandler,
+    userData,
+    logoutHandler,
+  } = useContext(AuthContext);
 
   const [_googleRequest, googleResponse, googlePromptAsync] =
     Google.useAuthRequest({
@@ -24,9 +30,11 @@ export default function ProfileScreen() {
         "68092276774-n59nfv48rp3i1lv4sh0ts4oru4bat0nd.apps.googleusercontent.com",
     });
 
-  const [_faceRequest, faceResponse, facePromptAsync] = Facebook.useAuthRequest({
-    expoClientId: "1983457675169499",
-  });
+  const [_faceRequest, faceResponse, facePromptAsync] = Facebook.useAuthRequest(
+    {
+      expoClientId: "1983457675169499",
+    }
+  );
 
   const createUser = async () => {
     if (userData.data && !userCreated) {
@@ -37,7 +45,7 @@ export default function ProfileScreen() {
           id: userData.data.id,
           username: userData.data.name,
           profileImageURL: userData.data.picture,
-          email: userData.loginOption, 
+          email: userData.loginOption,
         };
 
         await axios.post(url + `/account/user`, body);
@@ -46,6 +54,10 @@ export default function ProfileScreen() {
         console.log("error", error);
       }
     }
+  };
+
+  const openReport = () => {
+    Linking.openURL("https://forms.gle/MaS1PUAtMY83jFVX8");
   };
 
   createUser();
@@ -70,7 +82,7 @@ export default function ProfileScreen() {
             <Avatar
               size={120}
               rounded
-              title="P"
+              title="A"
               source={{ uri: userData.data.picture }}
               imageProps={{ resizeMode: "contain" }}
               containerStyle={{ backgroundColor: "purple" }}
@@ -111,7 +123,7 @@ export default function ProfileScreen() {
                 googlePromptAsync({ useProxy: true });
               }}
             />
-            <Button
+            {/* <Button
               title="Login with Facebook"
               titleStyle={{ marginLeft: 16 }}
               icon={<FontAwesome5 name="facebook-f" size={24} color="white" />}
@@ -124,7 +136,31 @@ export default function ProfileScreen() {
               onPress={() => {
                 facePromptAsync({ useProxy: true });
               }}
-            />
+            /> */}
+            {/* <AppleAuthentication.AppleAuthenticationButton
+              buttonType={
+                AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN
+              }
+              buttonStyle={
+                AppleAuthentication.AppleAuthenticationButtonStyle.BLACK
+              }
+              cornerRadius={2}
+              style={{ width: 260, height: 50 }}
+              onPress={async () => {
+                try {
+                  const credential = await AppleAuthentication.signInAsync({
+                    requestedScopes: [
+                      AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+                      AppleAuthentication.AppleAuthenticationScope.EMAIL,
+                    ],
+                  });
+                  console.log(credential);
+                  // signed in
+                } catch (e) {
+                  console.log(e);
+                }
+              }}
+            /> */}
           </>
         )}
         <View
@@ -139,6 +175,7 @@ export default function ProfileScreen() {
             style={{ marginTop: 80 }}
             buttonStyle={{ width: 50, height: 50, borderRadius: 100 }}
             type="outline"
+            onPress={openReport}
           />
         </View>
       </View>

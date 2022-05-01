@@ -83,18 +83,18 @@ export function RestaurantDetail({
           {`0${contact}`}
         </Text>
       </View>
-      <View style={styles.row}>
+      <Pressable
+        style={styles.row}
+        onPress={() => {
+          setExpanded((prev) => !prev);
+        }}
+      >
         <MaterialCommunityIcons
           name="clock-time-four-outline"
           size={20}
           color="#2F54EB"
         />
-        <Pressable
-          style={{ flexGrow: 1 }}
-          onPress={() => {
-            setExpanded((prev) => !prev);
-          }}
-        >
+        <View style={{ flexGrow: 1 }}>
           <Text
             style={styles.iconMargin}
             lightColor="#595959"
@@ -114,13 +114,13 @@ export function RestaurantDetail({
               </Text>
             ))}
           </View>
-        </Pressable>
+        </View>
         <Ionicons
           name={!expanded ? "caret-down" : "caret-up"}
           size={18}
           color="#2F54EB"
         />
-      </View>
+      </Pressable>
       <View style={styles.row}>
         <MaterialCommunityIcons name="floor-plan" size={20} color="#2F54EB" />
         <Text style={styles.iconMargin} lightColor="#595959" darkColor="white">

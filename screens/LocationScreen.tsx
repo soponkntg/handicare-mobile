@@ -111,7 +111,7 @@ export default function LocationScreen({
         catagory={location?.category || "category"}
         location={location?.located || "address"}
         openingDate={openingDate}
-        googleMap={location?.googelMap || "www.googlemap.com"}
+        googleMap={location?.googleMap || "www.googlemap.com"}
         contact={location?.contact || "0"}
       />
       <PlaceImage images={location?.images || []} />
@@ -150,7 +150,7 @@ export default function LocationScreen({
                 onPress={() => {
                   if (locationIsExisted) {
                     navigation.navigate("Restaurant", {
-                      locationID: location?.locationId,
+                      locationID: location?.locationId!,
                       restaurantID: item.restaurantId,
                     });
                   }
