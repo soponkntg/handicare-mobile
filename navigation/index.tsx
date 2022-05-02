@@ -16,16 +16,28 @@ import { ColorSchemeName } from "react-native";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
-import HomeScreen from "../screens/HomeScreen";
-import ExploreScreen from "../screens/ExploreScreen";
-import { MainStackParamList, RootTabParamList } from "../types";
+import {
+  HomeScreen,
+  SearchScreen as HSearchScreen,
+  LocationScreen as HLocationScreen,
+  RestaurantScreen as HRestaurantScreen,
+  AccessibilityScreen as HAccessibilityScreen,
+  CommentScreen as HCommentScreen,
+} from "../screens/Home";
+import {
+  ExploreScreen,
+  LocationScreen as ELocationScreen,
+  RestaurantScreen as ERestaurantScreen,
+  AccessibilityScreen as EAccessibilityScreen,
+  CommentScreen as ECommentScreen,
+} from "../screens/Explore";
+import {
+  ExploreStackParamList,
+  HomeStackParamList,
+  RootTabParamList,
+} from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
-import ProfileScreen from "../screens/ProfileScreen";
-import LocationScreen from "../screens/LocationScreen";
-import RestaurantScreen from "../screens/RestaurantScreen";
-import AccessibilityScreen from "../screens/AccessibilityScreen";
-import CommentScreen from "../screens/CommentScreen";
-import SearchScreen from "../screens/SearchScreen";
+import { ProfileScreen } from "../screens/Profile/ProfileScreen";
 
 const MyTheme = {
   ...DefaultTheme,
@@ -103,7 +115,7 @@ function BottomTabNavigator() {
  * A root stack navigator is often used for displaying modals on top of all other content.
  * https://reactnavigation.org/docs/modal
  */
-const HomeStack = createNativeStackNavigator<MainStackParamList>();
+const HomeStack = createNativeStackNavigator<HomeStackParamList>();
 function HomeStackNavigator() {
   return (
     <HomeStack.Navigator>
@@ -114,7 +126,7 @@ function HomeStackNavigator() {
       ></HomeStack.Screen>
       <HomeStack.Screen
         name="Search"
-        component={SearchScreen}
+        component={HSearchScreen}
         options={{
           headerBackTitle: "",
           headerTransparent: true,
@@ -124,7 +136,7 @@ function HomeStackNavigator() {
       ></HomeStack.Screen>
       <HomeStack.Screen
         name="Location"
-        component={LocationScreen}
+        component={HLocationScreen}
         options={{
           headerBackTitle: "",
           headerTransparent: true,
@@ -134,7 +146,7 @@ function HomeStackNavigator() {
       ></HomeStack.Screen>
       <HomeStack.Screen
         name="Restaurant"
-        component={RestaurantScreen}
+        component={HRestaurantScreen}
         options={{
           headerBackTitle: "",
           headerTransparent: true,
@@ -144,7 +156,7 @@ function HomeStackNavigator() {
       ></HomeStack.Screen>
       <HomeStack.Screen
         name="Accessibility"
-        component={AccessibilityScreen}
+        component={HAccessibilityScreen}
         options={{
           headerBackTitle: "",
           headerTransparent: true,
@@ -154,7 +166,7 @@ function HomeStackNavigator() {
       ></HomeStack.Screen>
       <HomeStack.Screen
         name="Comment"
-        component={CommentScreen}
+        component={HCommentScreen}
         options={{
           headerBackTitle: "",
           headerTransparent: true,
@@ -166,7 +178,7 @@ function HomeStackNavigator() {
   );
 }
 
-const ExploreStack = createNativeStackNavigator<MainStackParamList>();
+const ExploreStack = createNativeStackNavigator<ExploreStackParamList>();
 function ExploreStackNavigator() {
   return (
     <ExploreStack.Navigator>
@@ -177,7 +189,7 @@ function ExploreStackNavigator() {
       ></ExploreStack.Screen>
       <ExploreStack.Screen
         name="Location"
-        component={LocationScreen}
+        component={ELocationScreen}
         options={{
           headerBackTitle: "",
           headerTransparent: true,
@@ -187,7 +199,7 @@ function ExploreStackNavigator() {
       ></ExploreStack.Screen>
       <ExploreStack.Screen
         name="Restaurant"
-        component={RestaurantScreen}
+        component={ERestaurantScreen}
         options={{
           headerBackTitle: "",
           headerTransparent: true,
@@ -197,7 +209,17 @@ function ExploreStackNavigator() {
       ></ExploreStack.Screen>
       <ExploreStack.Screen
         name="Accessibility"
-        component={AccessibilityScreen}
+        component={EAccessibilityScreen}
+        options={{
+          headerBackTitle: "",
+          headerTransparent: true,
+          headerBackButtonMenuEnabled: false,
+          headerTitle: "",
+        }}
+      ></ExploreStack.Screen>
+      <ExploreStack.Screen
+        name="Comment"
+        component={ECommentScreen}
         options={{
           headerBackTitle: "",
           headerTransparent: true,

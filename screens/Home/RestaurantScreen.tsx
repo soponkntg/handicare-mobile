@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { StyleSheet, View } from "react-native";
-import { ScrollContainer, Text } from "../components/Themed";
+import { ScrollContainer, Text } from "../../components/Themed";
 import {
   LatLngType,
   LocationRestaurantInfoType,
-  MainStackScreenProps,
-} from "../types";
-import { PlaceTitle } from "../components/PlaceTItile";
-import { PlaceImage } from "../components/PlaceImage";
-import { Accessibility } from "../components/Accessibility";
-import { Loading } from "../components/Loading";
+  HomeStackScreenProps,
+} from "../../types";
+import { PlaceTitle } from "../../components/PlaceTItile";
+import { PlaceImage } from "../../components/PlaceImage";
+import { Accessibility } from "../../components/Accessibility";
+import { Loading } from "../../components/Loading";
 import {
   AirbnbRating,
   Avatar,
@@ -17,43 +17,40 @@ import {
   Dialog,
   ListItem,
 } from "react-native-elements";
-import { RestaurantDetail } from "../components/RestaurantDetail";
+import { RestaurantDetail } from "../../components/RestaurantDetail";
 import axios from "axios";
-import Backend from "../constants/Backend";
-import { AuthContext } from "../context/authContext";
+import Backend from "../../constants/Backend";
+import { AuthContext } from "../../context/authContext";
 import { useFocusEffect } from "@react-navigation/native";
 
-export default function RestaurantScreen({
+export function RestaurantScreen({
   navigation,
   route,
-}: MainStackScreenProps<"Restaurant">) {
+}: HomeStackScreenProps<"Restaurant">) {
   const [restaurant, setRestaurant] = useState<LocationRestaurantInfoType>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { latlng, userData } = useContext(AuthContext);
   const [modal, setModal] = useState(false);
 
-  const fetchLocationRestaurantDetail = useCallback(
-    async (loc: LatLngType) => {
-      try {
-        const url = Backend.backend_url || "http://localhost:4000";
-        const body = {
-          lat: loc.latitude,
-          lng: loc.longitude,
-          locationId: route.params.locationID,
-          restaurantId: route.params.restaurantID,
-        };
+  const fetchLocationRestaurantDetail = useCallback(async (loc: LatLngType) => {
+    try {
+      const url = Backend.backend_url || "http://localhost:4000";
+      const body = {
+        lat: loc.latitude,
+        lng: loc.longitude,
+        locationId: route.params.locationID,
+        restaurantId: route.params.restaurantID,
+      };
 
-        const { data } = await axios.post<LocationRestaurantInfoType>(
-          url + `/data/location/restaurant`,
-          body
-        );
-        setRestaurant(data);
-      } catch (error) {
-        console.log("error", error);
-      }
-    },
-    []
-  );
+      const { data } = await axios.post<LocationRestaurantInfoType>(
+        url + `/data/location/restaurant`,
+        body
+      );
+      setRestaurant(data);
+    } catch (error) {
+      console.log("error", error);
+    }
+  }, []);
 
   useEffect(() => {
     fetchLocationRestaurantDetail(latlng);
@@ -62,11 +59,9 @@ export default function RestaurantScreen({
 
   useFocusEffect(
     useCallback(() => {
-      console.log("focus")
-      fetchLocationRestaurantDetail(latlng)
+      fetchLocationRestaurantDetail(latlng);
     }, [fetchLocationRestaurantDetail])
   );
-
 
   if (isLoading) {
     return <Loading />;

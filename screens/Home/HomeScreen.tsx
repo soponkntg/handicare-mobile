@@ -1,24 +1,22 @@
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import { FlatList, StyleSheet, useColorScheme, View } from "react-native";
-import RecommendedCard from "../components/RecommendedCard";
-import { Loading } from "../components/Loading";
+import RecommendedCard from "../../components/RecommendedCard";
+import { Loading } from "../../components/Loading";
 import axios from "axios";
 
-import { ScrollContainer, Text } from "../components/Themed";
-import Backend from "../constants/Backend";
+import { ScrollContainer, Text } from "../../components/Themed";
+import Backend from "../../constants/Backend";
 import {
-  MainStackScreenProps,
+  HomeStackScreenProps,
   LocationType,
   RestaurantType,
   LatLngType,
-} from "../types";
-import { AuthContext } from "../context/authContext";
+} from "../../types";
+import { AuthContext } from "../../context/authContext";
 import { Input } from "react-native-elements";
 import { FontAwesome } from "@expo/vector-icons";
 
-export default function HomeScreen({
-  navigation,
-}: MainStackScreenProps<"Main">) {
+export function HomeScreen({ navigation }: HomeStackScreenProps<"Main">) {
   const [locations, setLocations] = useState<LocationType[]>([]);
   const [restaurants, setRestaurants] = useState<RestaurantType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);

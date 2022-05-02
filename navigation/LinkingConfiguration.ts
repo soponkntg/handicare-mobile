@@ -16,6 +16,7 @@ const linking: LinkingOptions<RootTabParamList> = {
       Home: {
         screens: {
           Main: "home",
+          Search: "home/search",
           Location: "home/location/:locationID",
           Restaurant: "home/restaurant/:locationID/:restaurantID",
           Accessibility: "home/accessibility",

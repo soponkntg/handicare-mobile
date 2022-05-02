@@ -18,8 +18,8 @@ declare global {
 
 // Root tab screen
 export type RootTabParamList = {
-  Home: NavigatorScreenParams<MainStackParamList> | undefined;
-  Explore: NavigatorScreenParams<MainStackParamList> | undefined;
+  Home: NavigatorScreenParams<HomeStackParamList> | undefined;
+  Explore: NavigatorScreenParams<ExploreStackParamList> | undefined;
   Profile: undefined;
 };
 
@@ -27,12 +27,12 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
   CompositeScreenProps<
     BottomTabScreenProps<RootTabParamList, Screen>,
     CompositeScreenProps<
-      NativeStackScreenProps<MainStackParamList>,
-      NativeStackScreenProps<MainStackParamList>
+      NativeStackScreenProps<HomeStackParamList>,
+      NativeStackScreenProps<ExploreStackParamList>
     >
   >;
 
-export type MainStackParamList = {
+export type HomeStackParamList = {
   Main: undefined;
   Search: { search: string };
   Location: { locationID: number };
@@ -47,8 +47,26 @@ export type MainStackParamList = {
   Comment: { locationID: number; restaurantID?: number };
 };
 
-export type MainStackScreenProps<Screen extends keyof MainStackParamList> =
-  NativeStackScreenProps<MainStackParamList, Screen>;
+export type HomeStackScreenProps<Screen extends keyof HomeStackParamList> =
+  NativeStackScreenProps<HomeStackParamList, Screen>;
+
+export type ExploreStackParamList = {
+  Main: undefined;
+  Location: { locationID: number };
+  Restaurant: { locationID: number; restaurantID?: number };
+  Accessibility: {
+    elevators: ElevatorType[];
+    parkings: ParkingType[];
+    toilets: ToiletType[];
+    ramps: RampType[];
+    doors: DoorType[];
+  };
+  Comment: { locationID: number; restaurantID?: number };
+};
+
+export type ExploreStackScreenProps<
+  Screen extends keyof ExploreStackParamList
+> = NativeStackScreenProps<ExploreStackParamList, Screen>;
 
 export interface LocationType {
   locationID: number;

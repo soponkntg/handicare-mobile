@@ -3,15 +3,15 @@ import React, { useState, useContext, createRef, useEffect } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { Button, Input } from "react-native-elements";
 import { AirbnbRating } from "react-native-ratings";
-import { Container, Text } from "../components/Themed";
-import Backend from "../constants/Backend";
-import { AuthContext } from "../context/authContext";
-import { MainStackScreenProps } from "../types";
+import { Container, Text } from "../../components/Themed";
+import Backend from "../../constants/Backend";
+import { AuthContext } from "../../context/authContext";
+import { HomeStackScreenProps } from "../../types";
 
-export default function CommentScreen({
+export function CommentScreen({
   navigation,
   route,
-}: MainStackScreenProps<"Comment">) {
+}: HomeStackScreenProps<"Comment">) {
   const [rating, setRating] = useState<number>(5);
   const [comment, setComment] = useState<string>("");
   const { userData } = useContext(AuthContext);

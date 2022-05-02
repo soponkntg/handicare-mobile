@@ -4,15 +4,15 @@ import { Avatar, Button } from "react-native-elements";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import * as Facebook from "expo-auth-session/providers/facebook";
 import * as Google from "expo-auth-session/providers/google";
-import { Container, Text } from "../components/Themed";
+import { Container, Text } from "../../components/Themed";
 import * as WebBrowser from "expo-web-browser";
-import { AuthContext } from "../context/authContext";
+import { AuthContext } from "../../context/authContext";
 import * as Linking from "expo-linking";
 import * as AppleAuthentication from "expo-apple-authentication";
 
 WebBrowser.maybeCompleteAuthSession();
 
-export default function ProfileScreen() {
+export function ProfileScreen() {
   const [userCreated, setUserCreated] = useState(false);
   const {
     latlng: _latlng,

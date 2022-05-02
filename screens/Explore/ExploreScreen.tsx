@@ -1,17 +1,15 @@
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
-import LocationCard from "../components/LocationCard";
+import LocationCard from "../../components/LocationCard";
 
-import { Container, Text } from "../components/Themed";
-import Backend from "../constants/Backend";
-import { LatLngType, LocationType, MainStackScreenProps } from "../types";
-import { Loading } from "../components/Loading";
-import { AuthContext } from "../context/authContext";
+import { Container, Text } from "../../components/Themed";
+import Backend from "../../constants/Backend";
+import { LatLngType, LocationType, ExploreStackScreenProps } from "../../types";
+import { Loading } from "../../components/Loading";
+import { AuthContext } from "../../context/authContext";
 import axios from "axios";
 
-export default function ExploreScreen({
-  navigation,
-}: MainStackScreenProps<"Main">) {
+export function ExploreScreen({ navigation }: ExploreStackScreenProps<"Main">) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [locations, setLocations] = useState<LocationType[]>([]);
   const { latlng } = useContext(AuthContext);

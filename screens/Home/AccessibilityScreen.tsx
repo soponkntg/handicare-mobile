@@ -1,26 +1,25 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import { DoorDetail } from "../components/DoorDetail";
-import { ElevatorDetail } from "../components/ElevatorDetail";
-import { ParkingDetail } from "../components/ParkingDetail";
-import { RampDetail } from "../components/RampDetail";
+import { DoorDetail } from "../../components/DoorDetail";
+import { ElevatorDetail } from "../../components/ElevatorDetail";
+import { ParkingDetail } from "../../components/ParkingDetail";
+import { RampDetail } from "../../components/RampDetail";
 
-import { ScrollContainer, Text } from "../components/Themed";
-import { ToiletDetail } from "../components/ToiletDetail";
+import { ScrollContainer, Text } from "../../components/Themed";
+import { ToiletDetail } from "../../components/ToiletDetail";
 import {
   DoorType,
   ElevatorType,
-  MainStackScreenProps,
+  HomeStackScreenProps,
   ParkingType,
   RampType,
   ToiletType,
-} from "../types";
+} from "../../types";
 
-export default function AccessibilityScreen({
+export function AccessibilityScreen({
   route,
-}: MainStackScreenProps<"Accessibility">) {
-
+}: HomeStackScreenProps<"Accessibility">) {
   const [elevatorExpanded, setElevatorExpanded] = React.useState(true);
   const [parkingExpanded, setParkingExpanded] = React.useState(true);
   const [toiletExpanded, setToiletExpanded] = React.useState(true);

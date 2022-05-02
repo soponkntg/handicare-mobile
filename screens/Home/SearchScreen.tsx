@@ -3,17 +3,17 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { Input } from "react-native-elements";
-import { Loading } from "../components/Loading";
-import SearchCard from "../components/SearchCard";
+import { Loading } from "../../components/Loading";
+import SearchCard from "../../components/SearchCard";
 
-import { Container, Text } from "../components/Themed";
-import Backend from "../constants/Backend";
-import { MainStackScreenProps, SearchResponse } from "../types";
+import { Container, Text } from "../../components/Themed";
+import Backend from "../../constants/Backend";
+import { HomeStackScreenProps, SearchResponse } from "../../types";
 
-export default function SearchScreen({
+export function SearchScreen({
   navigation,
   route,
-}: MainStackScreenProps<"Search">) {
+}: HomeStackScreenProps<"Search">) {
   const [search, setSearch] = useState<string>(route.params.search);
   const [searchResult, setSearchResult] = useState<SearchResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(false);

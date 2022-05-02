@@ -1,12 +1,16 @@
 import React, { useContext, useState, useCallback, useEffect } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
-import { ScrollContainer, Text } from "../components/Themed";
-import { LatLngType, LocationInfoType, MainStackScreenProps } from "../types";
-import { PlaceTitle } from "../components/PlaceTItile";
-import { LocationDetail } from "../components/LocationDetail";
-import { PlaceImage } from "../components/PlaceImage";
-import { Accessibility } from "../components/Accessibility";
-import Backend from "../constants/Backend";
+import { ScrollContainer, Text } from "../../components/Themed";
+import {
+  LatLngType,
+  LocationInfoType,
+  ExploreStackScreenProps,
+} from "../../types";
+import { PlaceTitle } from "../../components/PlaceTItile";
+import { LocationDetail } from "../../components/LocationDetail";
+import { PlaceImage } from "../../components/PlaceImage";
+import { Accessibility } from "../../components/Accessibility";
+import Backend from "../../constants/Backend";
 import {
   AirbnbRating,
   Avatar,
@@ -15,15 +19,15 @@ import {
   Image,
   ListItem,
 } from "react-native-elements";
-import { AuthContext } from "../context/authContext";
+import { AuthContext } from "../../context/authContext";
 import axios from "axios";
-import { Loading } from "../components/Loading";
+import { Loading } from "../../components/Loading";
 import { useFocusEffect } from "@react-navigation/native";
 
-export default function LocationScreen({
+export function LocationScreen({
   navigation,
   route,
-}: MainStackScreenProps<"Location">) {
+}: ExploreStackScreenProps<"Location">) {
   const [location, setLocation] = useState<LocationInfoType>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [modal, setModal] = useState(false);
@@ -37,10 +41,7 @@ export default function LocationScreen({
     }
   };
 
-  console.log(location);
-
   const fetchLocation = useCallback(async (loc: LatLngType) => {
-    console.log('fetch')
     try {
       const url = Backend.backend_url || "http://localhost:4000";
       const body = {
@@ -66,8 +67,7 @@ export default function LocationScreen({
 
   useFocusEffect(
     useCallback(() => {
-      console.log("focus")
-      fetchLocation(latlng)
+      fetchLocation(latlng);
     }, [fetchLocation])
   );
 
