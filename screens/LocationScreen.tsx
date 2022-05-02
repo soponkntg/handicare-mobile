@@ -195,6 +195,7 @@ export default function LocationScreen({
                       : value.profileImageURL,
                 }}
                 imageProps={{ resizeMode: "contain" }}
+                containerStyle={{ backgroundColor: "purple" }}
               />
               <ListItem.Content>
                 <View style={styles.rowSapce}>
