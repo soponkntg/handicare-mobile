@@ -1,3 +1,3 @@
 export default {
-  backend_url: "https://api.handicare.site:4000",
+  backend_url: "https://api.handicare.site:4000"
 };

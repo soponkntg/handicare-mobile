@@ -18,6 +18,7 @@ import {
 import { AuthContext } from "../context/authContext";
 import axios from "axios";
 import { Loading } from "../components/Loading";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function LocationScreen({
   navigation,
@@ -59,6 +60,14 @@ export default function LocationScreen({
     fetchRecommendedLocations(latlng);
     setIsLoading(false);
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        fetchRecommendedLocations(latlng);
+      };
+    }, [fetchRecommendedLocations])
+  );
 
   const commentNavigationHandler = (locationID: number) => {
     navigation.navigate("Comment", { locationID });
