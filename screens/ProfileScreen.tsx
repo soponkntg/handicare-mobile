@@ -61,7 +61,7 @@ export default function ProfileScreen() {
             <Avatar
               size={120}
               rounded
-              title="A"
+              title={userData.data.name.charAt(0)}
               source={{
                 uri:
                   userData.data.picture === null
