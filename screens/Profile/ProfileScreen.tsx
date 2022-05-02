@@ -148,8 +148,6 @@ export function ProfileScreen() {
                   } else {
                     loginHandler(credential.user, "apple");
                   }
-                  console.log(credential);
-                  // signed in
                 } catch (e) {
                   console.log(e);
                 }

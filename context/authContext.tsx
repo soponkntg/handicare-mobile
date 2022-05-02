@@ -184,7 +184,6 @@ export const AuthContextProvider = (props: {
     token: string,
     loginOption: "facebook" | "google" | "apple"
   ) => {
-    console.log(token);
     switch (loginOption) {
       case "google":
         fetchGoogleData(token);
