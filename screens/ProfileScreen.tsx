@@ -7,7 +7,6 @@ import * as Google from "expo-auth-session/providers/google";
 import { Container, Text } from "../components/Themed";
 import * as WebBrowser from "expo-web-browser";
 import { AuthContext } from "../context/authContext";
-import axios from "axios";
 import * as Linking from "expo-linking";
 import * as AppleAuthentication from "expo-apple-authentication";
 
@@ -61,7 +60,7 @@ export default function ProfileScreen() {
             <Avatar
               size={120}
               rounded
-              title="A"
+              title={userData.data.name.charAt(0)}
               source={{
                 uri:
                   userData.data.picture === null
@@ -143,6 +142,7 @@ export default function ProfileScreen() {
                   if (detailsArePopulated) {
                     const username =
                       credential.fullName?.givenName! +
+                      " " +
                       credential.fullName?.familyName!;
                     createAppleUser(credential.user, username);
                   } else {

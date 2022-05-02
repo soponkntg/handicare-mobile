@@ -18,11 +18,12 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": false,
+      "usesAppleSignIn": true,
       "infoPlist": {
         "UIBackgroundModes": ["fetch"]
       },
       "bundleIdentifier": "com.sopon.kntg.handicare",
-      "buildNumber": "3"
+      "buildNumber": "4"
     },
     "android": {
       "adaptiveIcon": {

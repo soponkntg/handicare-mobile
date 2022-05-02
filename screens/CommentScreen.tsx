@@ -12,7 +12,7 @@ export default function CommentScreen({
   navigation,
   route,
 }: MainStackScreenProps<"Comment">) {
-  const [rating, setRating] = useState<number>(0);
+  const [rating, setRating] = useState<number>(5);
   const [comment, setComment] = useState<string>("");
   const { userData } = useContext(AuthContext);
   const commentRef = createRef<TextInput>();

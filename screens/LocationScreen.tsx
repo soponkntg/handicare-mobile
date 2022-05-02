@@ -37,6 +37,8 @@ export default function LocationScreen({
     }
   };
 
+  console.log(location);
+
   const fetchRecommendedLocations = useCallback(async (loc: LatLngType) => {
     try {
       const url = Backend.backend_url || "http://localhost:4000";
@@ -194,9 +196,15 @@ export default function LocationScreen({
             <ListItem key={index}>
               <Avatar
                 rounded
-                title="PF"
-                source={{ uri: value.profileImageURL }}
+                title={value.userName.charAt(0)}
+                source={{
+                  uri:
+                    value.profileImageURL === null
+                      ? undefined
+                      : value.profileImageURL,
+                }}
                 imageProps={{ resizeMode: "contain" }}
+                containerStyle={{ backgroundColor: "purple" }}
               />
               <ListItem.Content>
                 <View style={styles.rowSapce}>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useContext } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, useColorScheme, View } from "react-native";
 import RecommendedCard from "../components/RecommendedCard";
 import { Loading } from "../components/Loading";
 import axios from "axios";
@@ -24,6 +24,9 @@ export default function HomeScreen({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>();
   const { latlng } = useContext(AuthContext);
+
+  const theme = useColorScheme();
+  const searchFont = theme === "light" ? "black" : "white";
 
   const locationNavigationHandler = (locationID: number) => {
     navigation.navigate("Location", { locationID });
@@ -87,7 +90,7 @@ export default function HomeScreen({
           borderColor: "#595959",
           paddingHorizontal: 12,
         }}
-        inputStyle={{ fontSize: 12 }}
+        inputStyle={{ fontSize: 12, color: searchFont }}
         value={search}
         onChangeText={(value) => {
           setSearch(value);
