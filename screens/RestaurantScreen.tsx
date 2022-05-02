@@ -185,8 +185,13 @@ export default function RestaurantScreen({
           <ListItem key={index}>
             <Avatar
               rounded
-              title="PF"
-              source={{ uri: value.profileImageURL }}
+              title={value.userName.charAt(0)}
+              source={{
+                uri:
+                  value.profileImageURL === null
+                    ? undefined
+                    : value.profileImageURL,
+              }}
               imageProps={{ resizeMode: "contain" }}
             />
             <ListItem.Content>

@@ -23,7 +23,7 @@
         "UIBackgroundModes": ["fetch"]
       },
       "bundleIdentifier": "com.sopon.kntg.handicare",
-      "buildNumber": "3"
+      "buildNumber": "4"
     },
     "android": {
       "adaptiveIcon": {
