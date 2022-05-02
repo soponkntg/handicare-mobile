@@ -39,7 +39,8 @@ export default function LocationScreen({
 
   console.log(location);
 
-  const fetchRecommendedLocations = useCallback(async (loc: LatLngType) => {
+  const fetchLocation = useCallback(async (loc: LatLngType) => {
+    console.log('fetch')
     try {
       const url = Backend.backend_url || "http://localhost:4000";
       const body = {
@@ -59,16 +60,15 @@ export default function LocationScreen({
   }, []);
 
   useEffect(() => {
-    fetchRecommendedLocations(latlng);
+    fetchLocation(latlng);
     setIsLoading(false);
   }, []);
 
   useFocusEffect(
     useCallback(() => {
-      return () => {
-        fetchRecommendedLocations(latlng);
-      };
-    }, [fetchRecommendedLocations])
+      console.log("focus")
+      fetchLocation(latlng)
+    }, [fetchLocation])
   );
 
   const commentNavigationHandler = (locationID: number) => {

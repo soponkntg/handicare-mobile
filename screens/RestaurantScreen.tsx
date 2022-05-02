@@ -21,6 +21,7 @@ import { RestaurantDetail } from "../components/RestaurantDetail";
 import axios from "axios";
 import Backend from "../constants/Backend";
 import { AuthContext } from "../context/authContext";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function RestaurantScreen({
   navigation,
@@ -31,7 +32,7 @@ export default function RestaurantScreen({
   const { latlng, userData } = useContext(AuthContext);
   const [modal, setModal] = useState(false);
 
-  const fetchLocationRestuarantDeatail = useCallback(
+  const fetchLocationRestaurantDetail = useCallback(
     async (loc: LatLngType) => {
       try {
         const url = Backend.backend_url || "http://localhost:4000";
@@ -55,9 +56,17 @@ export default function RestaurantScreen({
   );
 
   useEffect(() => {
-    fetchLocationRestuarantDeatail(latlng);
+    fetchLocationRestaurantDetail(latlng);
     setIsLoading(false);
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log("focus")
+      fetchLocationRestaurantDetail(latlng)
+    }, [fetchLocationRestaurantDetail])
+  );
+
 
   if (isLoading) {
     return <Loading />;
