@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState, useContext, createRef, useEffect } from "react";
-import { StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, TextInput, useColorScheme, View } from "react-native";
 import { Button, Input } from "react-native-elements";
 import { AirbnbRating } from "react-native-ratings";
 import { Container, Text } from "../../components/Themed";
@@ -19,6 +19,9 @@ export function CommentScreen({
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
     !!userData.token && !!userData.data
   );
+
+  const theme = useColorScheme();
+  const searchFont = theme === "light" ? "black" : "white";
 
   useEffect(() => {
     setIsLoggedIn(!!userData.token && !!userData.data);
@@ -88,7 +91,7 @@ export function CommentScreen({
               borderWidth: 1,
               padding: 10,
             }}
-            inputStyle={{ fontSize: 14 }}
+            inputStyle={{ fontSize: 1, color: searchFont }}
             multiline
             defaultValue={comment}
             onChangeText={(value) => {

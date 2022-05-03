@@ -178,52 +178,53 @@ export function LocationScreen({
         </View>
       )}
       <View>
-        <View>
-          <View style={styles.rowSapce}>
-            <Text style={{ fontSize: 16 }} bold>
-              Comments
-            </Text>
-            <Button
-              title="Add a comment"
-              type="outline"
-              containerStyle={{ width: 120, paddingHorizontal: 6 }}
-              titleStyle={{ fontSize: 12 }}
-              buttonStyle={{ borderRadius: 12 }}
-              onPress={toggleModal}
-            />
-          </View>
-          {(location?.comments || []).map((value, index) => (
-            <ListItem key={index}>
-              <Avatar
-                rounded
-                title={value.userName.charAt(0)}
-                source={{
-                  uri:
-                    value.profileImageURL === null
-                      ? undefined
-                      : value.profileImageURL,
-                }}
-                imageProps={{ resizeMode: "contain" }}
-                containerStyle={{ backgroundColor: "purple" }}
-              />
-              <ListItem.Content>
-                <View style={styles.rowSapce}>
-                  <Text style={{ fontSize: 12 }} bold>
-                    {value.userName}
-                  </Text>
-                  <AirbnbRating
-                    isDisabled={true}
-                    showRating={false}
-                    size={12}
-                    defaultRating={value.rating}
-                    selectedColor="#85A5FF"
-                  />
-                </View>
-                <Text style={{ fontSize: 12 }}>{value.message}</Text>
-              </ListItem.Content>
-            </ListItem>
-          ))}
+        <View style={styles.rowSapce}>
+          <Text style={{ fontSize: 16 }} bold>
+            Comments
+          </Text>
+          <Button
+            title="Add a comment"
+            type="outline"
+            containerStyle={{ width: 120, paddingHorizontal: 6 }}
+            titleStyle={{ fontSize: 12 }}
+            buttonStyle={{ borderRadius: 12 }}
+            onPress={toggleModal}
+          />
         </View>
+        {(location?.comments || []).map((value, index) => (
+          <ListItem
+            key={index}
+            containerStyle={{ backgroundColor: "transparent" }}
+          >
+            <Avatar
+              rounded
+              title={value.userName.charAt(0)}
+              source={{
+                uri:
+                  value.profileImageURL === null
+                    ? undefined
+                    : value.profileImageURL,
+              }}
+              imageProps={{ resizeMode: "contain" }}
+              containerStyle={{ backgroundColor: "purple" }}
+            />
+            <ListItem.Content>
+              <View style={styles.rowSapce}>
+                <Text style={{ fontSize: 12 }} bold>
+                  {value.userName}
+                </Text>
+                <AirbnbRating
+                  isDisabled={true}
+                  showRating={false}
+                  size={12}
+                  defaultRating={value.rating}
+                  selectedColor="#85A5FF"
+                />
+              </View>
+              <Text style={{ fontSize: 12 }}>{value.message}</Text>
+            </ListItem.Content>
+          </ListItem>
+        ))}
       </View>
     </ScrollContainer>
   );

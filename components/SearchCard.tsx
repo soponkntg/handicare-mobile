@@ -60,5 +60,6 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 14,
     marginBottom: 5,
+    color: "black",
   },
 });

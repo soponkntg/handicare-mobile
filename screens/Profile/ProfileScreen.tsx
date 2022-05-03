@@ -93,7 +93,7 @@ export function ProfileScreen() {
         ) : (
           <>
             <Button
-              title="Login with Google"
+              title="Sign in with Google"
               titleStyle={{ marginLeft: 16 }}
               icon={<FontAwesome5 name="google" size={24} color="white" />}
               buttonStyle={{

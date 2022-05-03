@@ -20,10 +20,12 @@
       "supportsTablet": false,
       "usesAppleSignIn": true,
       "infoPlist": {
-        "UIBackgroundModes": ["fetch"]
+        "UIBackgroundModes": ["fetch"],
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app usages device location on places' information, information will be sorted by the distance from place to device other wise sorted by name.",
+        "NSLocationWhenInUseUsageDescription": "This app usages device location on places' information, information will be sorted by the distance from place to device other wise sorted by name."
       },
       "bundleIdentifier": "com.sopon.kntg.handicare",
-      "buildNumber": "4"
+      "buildNumber": "6"
     },
     "android": {
       "adaptiveIcon": {

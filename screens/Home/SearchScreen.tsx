@@ -1,7 +1,7 @@
 import { FontAwesome } from "@expo/vector-icons";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, useColorScheme, View } from "react-native";
 import { Input } from "react-native-elements";
 import { Loading } from "../../components/Loading";
 import SearchCard from "../../components/SearchCard";
@@ -17,6 +17,9 @@ export function SearchScreen({
   const [search, setSearch] = useState<string>(route.params.search);
   const [searchResult, setSearchResult] = useState<SearchResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const theme = useColorScheme();
+  const searchFont = theme === "light" ? "black" : "white";
 
   const searchPlaces = async () => {
     setLoading(true);
@@ -65,7 +68,7 @@ export function SearchScreen({
           borderColor: "#595959",
           paddingHorizontal: 12,
         }}
-        inputStyle={{ fontSize: 12 }}
+        inputStyle={{ fontSize: 12, color: searchFont }}
         value={search}
         onChangeText={(value) => {
           setSearch(value);
