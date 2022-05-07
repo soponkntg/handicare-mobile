@@ -186,7 +186,10 @@ export function RestaurantScreen({
           />
         </View>
         {(restaurant?.comments || []).map((value, index) => (
-          <ListItem key={index}>
+          <ListItem
+            key={index}
+            containerStyle={{ backgroundColor: "transparent" }}
+          >
             <Avatar
               rounded
               title={value.userName.charAt(0)}
@@ -197,6 +200,7 @@ export function RestaurantScreen({
                     : value.profileImageURL,
               }}
               imageProps={{ resizeMode: "contain" }}
+              containerStyle={{ backgroundColor: "purple" }}
             />
             <ListItem.Content>
               <View style={styles.rowSapce}>

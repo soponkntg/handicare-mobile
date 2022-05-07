@@ -193,7 +193,10 @@ export function LocationScreen({
             />
           </View>
           {(location?.comments || []).map((value, index) => (
-            <ListItem key={index}>
+            <ListItem
+              key={index}
+              containerStyle={{ backgroundColor: "transparent" }}
+            >
               <Avatar
                 rounded
                 title={value.userName.charAt(0)}
